@@ -668,18 +668,8 @@
       overlay.setAttribute("aria-hidden", "true");
     }
 
-    function fixLocalLink(anchorId, filename){
-      const a = byId(anchorId);
-      if (!a) return;
-      a.href = new URL(filename, window.location.href).href;
-    }
-
     window.addEventListener("DOMContentLoaded", () => {
       const stateSelect = byId("state-select");
-
-      // Fix GH Pages paths for these local pages
-      fixLocalLink("link-privacy", "privacy.html");
-      fixLocalLink("link-support", "support.html");
 
       // Button wiring
       const btnRegistration = byId("btn-registration");
