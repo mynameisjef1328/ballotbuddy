@@ -8,7 +8,6 @@
 
   <style>
     :root{
-      /* Ballot Buddy inverted (panel stays “screen blue”) */
       --ink: #ffffff;
       --inkSoft: rgba(255,255,255,0.84);
 
@@ -23,8 +22,6 @@
       --shadow2: rgba(0, 0, 0, 0.18);
 
       --radius: 20px;
-
-      /* spacing */
       --gap: 12px;
     }
 
@@ -34,7 +31,6 @@
       margin: 0;
       min-height: 100vh;
 
-      /* nicer iPhone safe-area padding */
       padding:
         calc(22px + env(safe-area-inset-top))
         calc(22px + env(safe-area-inset-right))
@@ -48,7 +44,6 @@
       font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color: var(--ink);
 
-      /* Less white, more blue “app backdrop” */
       background:
         radial-gradient(900px 520px at 50% -10%, rgba(183, 215, 255, 0.95) 0%, rgba(183, 215, 255, 0) 62%),
         radial-gradient(820px 520px at 15% 95%, rgba(26, 96, 224, 0.35) 0%, rgba(26, 96, 224, 0) 58%),
@@ -80,7 +75,6 @@
       overflow: hidden;
     }
 
-    /* subtle glow like the mock */
     .panel:before{
       content:"";
       position:absolute;
@@ -131,7 +125,6 @@
       z-index: 1;
     }
 
-    /* NEW: stack adds spacing between dropdown, buttons, and share card */
     .stack{
       display: flex;
       flex-direction: column;
@@ -141,6 +134,16 @@
     }
 
     .selectWrap{ position: relative; }
+    .selectChevron:after{
+      content: "▾";
+      position:absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: rgba(255,255,255,0.72);
+      font-size: 16px;
+    }
 
     select{
       width: 100%;
@@ -158,15 +161,16 @@
       cursor: pointer;
     }
 
-    .selectChevron:after{
-      content: "▾";
-      position:absolute;
-      right: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      pointer-events: none;
-      color: rgba(255,255,255,0.72);
-      font-size: 16px;
+    /* gentle nudge if they tap without selecting a state */
+    .selectWrap.pulse select{
+      border-color: rgba(255,255,255,0.55);
+      box-shadow: 0 0 0 5px rgba(255,255,255,0.10), 0 12px 22px rgba(0,0,0,0.18);
+      animation: pulseGlow 0.55s ease;
+    }
+    @keyframes pulseGlow{
+      0%{ transform: translateY(0); }
+      35%{ transform: translateY(-1px); }
+      100%{ transform: translateY(0); }
     }
 
     .btn{
@@ -271,6 +275,7 @@
       pointer-events: none;
       transition: opacity 0.18s ease, transform 0.18s ease;
       box-shadow: 0 10px 20px rgba(0,0,0,0.22);
+      z-index: 9999;
     }
     .toast.show{
       opacity: 1;
@@ -320,20 +325,60 @@
       <div class="subtitle">Are you ready to vote?</div>
 
       <div class="stack">
-        <div class="selectWrap selectChevron">
+        <div class="selectWrap selectChevron" id="selectWrap">
           <select id="state-select" aria-label="Select your state">
             <option value="">Select My State</option>
-            <option>Alabama</option><option>Alaska</option><option>Arizona</option><option>Arkansas</option><option>California</option>
-            <option>Colorado</option><option>Connecticut</option><option>Delaware</option><option>District of Columbia</option><option>Florida</option>
-            <option>Georgia</option><option>Hawaii</option><option>Idaho</option><option>Illinois</option><option>Indiana</option>
-            <option>Iowa</option><option>Kansas</option><option>Kentucky</option><option>Louisiana</option><option>Maine</option>
-            <option>Maryland</option><option>Massachusetts</option><option>Michigan</option><option>Minnesota</option><option>Mississippi</option>
-            <option>Missouri</option><option>Montana</option><option>Nebraska</option><option>Nevada</option><option>New Hampshire</option>
-            <option>New Jersey</option><option>New Mexico</option><option>New York</option><option>North Carolina</option><option>North Dakota</option>
-            <option>Ohio</option><option>Oklahoma</option><option>Oregon</option><option>Pennsylvania</option><option>Rhode Island</option>
-            <option>South Carolina</option><option>South Dakota</option><option>Tennessee</option><option>Texas</option><option>Utah</option>
-            <option>Vermont</option><option>Virginia</option><option>Washington</option><option>West Virginia</option><option>Wisconsin</option>
-            <option>Wyoming</option>
+            <option value="alabama">Alabama</option>
+            <option value="alaska">Alaska</option>
+            <option value="arizona">Arizona</option>
+            <option value="arkansas">Arkansas</option>
+            <option value="california">California</option>
+            <option value="colorado">Colorado</option>
+            <option value="connecticut">Connecticut</option>
+            <option value="delaware">Delaware</option>
+            <option value="district-of-columbia">District of Columbia</option>
+            <option value="florida">Florida</option>
+            <option value="georgia">Georgia</option>
+            <option value="hawaii">Hawaii</option>
+            <option value="idaho">Idaho</option>
+            <option value="illinois">Illinois</option>
+            <option value="indiana">Indiana</option>
+            <option value="iowa">Iowa</option>
+            <option value="kansas">Kansas</option>
+            <option value="kentucky">Kentucky</option>
+            <option value="louisiana">Louisiana</option>
+            <option value="maine">Maine</option>
+            <option value="maryland">Maryland</option>
+            <option value="massachusetts">Massachusetts</option>
+            <option value="michigan">Michigan</option>
+            <option value="minnesota">Minnesota</option>
+            <option value="mississippi">Mississippi</option>
+            <option value="missouri">Missouri</option>
+            <option value="montana">Montana</option>
+            <option value="nebraska">Nebraska</option>
+            <option value="nevada">Nevada</option>
+            <option value="new-hampshire">New Hampshire</option>
+            <option value="new-jersey">New Jersey</option>
+            <option value="new-mexico">New Mexico</option>
+            <option value="new-york">New York</option>
+            <option value="north-carolina">North Carolina</option>
+            <option value="north-dakota">North Dakota</option>
+            <option value="ohio">Ohio</option>
+            <option value="oklahoma">Oklahoma</option>
+            <option value="oregon">Oregon</option>
+            <option value="pennsylvania">Pennsylvania</option>
+            <option value="rhode-island">Rhode Island</option>
+            <option value="south-carolina">South Carolina</option>
+            <option value="south-dakota">South Dakota</option>
+            <option value="tennessee">Tennessee</option>
+            <option value="texas">Texas</option>
+            <option value="utah">Utah</option>
+            <option value="vermont">Vermont</option>
+            <option value="virginia">Virginia</option>
+            <option value="washington">Washington</option>
+            <option value="west-virginia">West Virginia</option>
+            <option value="wisconsin">Wisconsin</option>
+            <option value="wyoming">Wyoming</option>
           </select>
         </div>
 
@@ -397,65 +442,93 @@
   <script>
     const APP_NAME = "Ballot Buddy";
 
-    const URL_CHECK_FALLBACK = "https://www.vote.org/am-i-registered-to-vote/";
-    const URL_DEADLINES_FALLBACK = "https://www.vote.org/voter-registration-deadlines/";
-    const URL_ABSENTEE_FALLBACK = "https://www.vote.org/absentee-ballot/";
+    // Set this to your final domain later, otherwise it uses whatever page you're on.
+    const APP_URL = window.location.origin + window.location.pathname;
+
+    // Core links (nonpartisan)
+    const URL_CHECK_REG = "https://www.vote.org/am-i-registered-to-vote/";
+    const URL_DEADLINES = "https://www.vote.org/voter-registration-deadlines/";
+    const URL_ABSENTEE_BASE = "https://www.vote.org/absentee-ballot/";
 
     const stateSelect = document.getElementById("state-select");
+    const selectWrap = document.getElementById("selectWrap");
 
-    document.getElementById("btn-registration").addEventListener("click", openRegistrationCheck);
-    document.getElementById("btn-deadlines").addEventListener("click", openDeadlines);
-    document.getElementById("btn-absentee").addEventListener("click", openAbsentee);
-    document.getElementById("btn-share").addEventListener("click", shareLink);
+    const btnReg = document.getElementById("btn-registration");
+    const btnDeadlines = document.getElementById("btn-deadlines");
+    const btnAbsentee = document.getElementById("btn-absentee");
+    const btnShare = document.getElementById("btn-share");
 
-    stateSelect.addEventListener("change", () => {
-      if (stateSelect.value) showToast(`Selected: ${stateSelect.value}`);
+    btnReg.addEventListener("click", () => {
+      // registration check works without selecting a state
+      safeNavigate(URL_CHECK_REG);
     });
 
-    function stateSlug(name) {
-      return name.trim().toLowerCase().replace(/[.]/g, "").replace(/\s+/g, "-");
+    btnDeadlines.addEventListener("click", () => {
+      // deadlines page works without selecting a state
+      safeNavigate(URL_DEADLINES);
+    });
+
+    btnAbsentee.addEventListener("click", () => {
+      const slug = getStateSlug();
+      if (!slug) return requireState("Select your state to request an absentee ballot.");
+      safeNavigate(URL_ABSENTEE_BASE + slug + "/");
+    });
+
+    btnShare.addEventListener("click", shareLink);
+
+    stateSelect.addEventListener("change", () => {
+      const slug = getStateSlug();
+      if (slug) showToast(`Selected: ${stateSelect.options[stateSelect.selectedIndex].text}`);
+    });
+
+    function getStateSlug() {
+      return (stateSelect.value || "").trim();
     }
 
-    function open(url) {
-      window.open(url, "_blank", "noopener,noreferrer");
+    function safeNavigate(url) {
+      // More reliable on iOS/PWA than popups, but still opens quickly.
+      try {
+        window.location.href = url;
+      } catch (e) {
+        window.open(url, "_blank", "noopener,noreferrer");
+      }
     }
 
-    function openRegistrationCheck() {
-      const state = stateSelect.value;
-      if (!state) return open(URL_CHECK_FALLBACK);
-      open(`https://www.vote.org/${stateSlug(state)}/`);
+    function requireState(msg) {
+      pulseSelect();
+      showToast(msg);
     }
 
-    function openDeadlines() {
-      const state = stateSelect.value;
-      if (!state) return open(URL_DEADLINES_FALLBACK);
-      open(`https://www.vote.org/${stateSlug(state)}/`);
+    function pulseSelect() {
+      selectWrap.classList.remove("pulse");
+      void selectWrap.offsetWidth;
+      selectWrap.classList.add("pulse");
+      setTimeout(() => selectWrap.classList.remove("pulse"), 650);
     }
 
-    function openAbsentee() {
-      const state = stateSelect.value;
-      if (!state) return open(URL_ABSENTEE_FALLBACK);
-      open(`https://www.vote.org/absentee-ballot/${stateSlug(state)}/`);
-    }
-
-    function shareLink() {
-      const pageUrl = window.location.href;
-      const state = stateSelect.value ? ` (${stateSelect.value})` : "";
-      const message = `I just used ${APP_NAME}${state} to make sure I'm ready to vote. Super quick. ${pageUrl}`;
+    async function shareLink() {
+      const slug = getStateSlug();
+      const stateName = slug ? ` (${stateSelect.options[stateSelect.selectedIndex].text})` : "";
+      const message = `I just used ${APP_NAME}${stateName} to get ready to vote. Super quick: ${APP_URL}`;
 
       if (navigator.share) {
-        navigator.share({ title: APP_NAME, text: message, url: pageUrl }).catch(() => {});
-      } else {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(message).then(() => {
-            showToast("Copied. Share it with a friend 💙");
-          }).catch(() => {
-            prompt("Copy this message:", message);
-          });
-        } else {
-          prompt("Copy this message:", message);
+        try {
+          await navigator.share({ title: APP_NAME, text: message, url: APP_URL });
+          return;
+        } catch (e) {
+          // user canceled or share failed, fall through to copy
         }
       }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        try {
+          await navigator.clipboard.writeText(message);
+          showToast("Copied. Share it with a friend 💙");
+          return;
+        } catch (e) {}
+      }
+
+      prompt("Copy this message:", message);
     }
 
     function showToast(text) {
@@ -463,7 +536,7 @@
       toast.textContent = text;
       toast.classList.add("show");
       clearTimeout(window.__toastTimer);
-      window.__toastTimer = setTimeout(() => toast.classList.remove("show"), 1400);
+      window.__toastTimer = setTimeout(() => toast.classList.remove("show"), 1600);
     }
   </script>
 </body>
