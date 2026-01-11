@@ -578,14 +578,66 @@
   <script>
     const APP_NAME = "Ballot Buddy";
 
-    // Reliable destinations
-    const URL_CHECK = "https://www.vote.org/am-i-registered-to-vote/";
-    const URL_DEADLINES = "https://www.vote.org/voter-registration-deadlines/";
-    const URL_ABSENTEE_BASE = "https://www.vote.org/absentee-ballot/";
-    const URL_POLLING = "https://www.vote.org/polling-place-locator/";
-    const URL_REMINDERS = "https://www.vote.org/election-reminders/";
+    <script>
+  const APP_NAME = "Ballot Buddy";
 
-    const stateSelect = document.getElementById("state-select");
+  // --- Local page resolver (fixes GH Pages case/path 404s) ---
+  async function goLocalPage(candidates){
+    for (const path of candidates){
+      try{
+        const res = await fetch(path, { method: "HEAD", cache: "no-store" });
+        if (res.ok){
+          window.location.href = path;
+          return;
+        }
+      }catch(e){}
+    }
+    // fallback, at least attempt the first
+    window.location.href = candidates[0];
+  }
+
+  // Attach after DOM exists
+  window.addEventListener("DOMContentLoaded", () => {
+    const privacy = document.getElementById("link-privacy");
+    const support = document.getElementById("link-support");
+
+    if (privacy){
+      privacy.addEventListener("click", (e) => {
+        e.preventDefault();
+        goLocalPage([
+          "privacy.html",
+          "Privacy.html",
+          "privacy/",
+          "Privacy/",
+          "privacy/index.html",
+          "Privacy/index.html"
+        ]);
+      });
+    }
+
+    if (support){
+      support.addEventListener("click", (e) => {
+        e.preventDefault();
+        goLocalPage([
+          "support.html",
+          "Support.html",
+          "support/",
+          "Support/",
+          "support/index.html",
+          "Support/index.html"
+        ]);
+      });
+    }
+  });
+
+  // Reliable destinations
+  const URL_CHECK = "https://www.vote.org/am-i-registered-to-vote/";
+  const URL_DEADLINES = "https://www.vote.org/voter-registration-deadlines/";
+  const URL_ABSENTEE_BASE = "https://www.vote.org/absentee-ballot/";
+  const URL_POLLING = "https://www.vote.org/polling-place-locator/";
+  const URL_REMINDERS = "https://www.vote.org/election-reminders/";
+
+  const stateSelect = document.getElementById("state-select");
 
     document.getElementById("btn-registration").addEventListener("click", () => safeOpen(URL_CHECK));
     document.getElementById("btn-deadlines").addEventListener("click", () => safeOpen(URL_DEADLINES));
