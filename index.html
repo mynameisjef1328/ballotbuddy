@@ -3,136 +3,423 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>VoteCheck</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap">
+  <title>Ballot Buddy</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+
   <style>
-    :root {
-      --primary: #2563EB;
-      --secondary: #3B82F6;
-      --text-light: #ffffff;
-      --bg-light: #f9fafb;
+    :root{
+      /* Ballot Buddy theme (warm blues, no red) */
+      --bgTop: #e9f1ff;
+      --bgMid: #cfe2ff;
+      --bgBot: #8bb6ff;
+
+      --ink: #0b2a59;
+      --inkSoft: rgba(11, 42, 89, 0.70);
+
+      --card: rgba(255,255,255,0.58);
+      --card2: rgba(255,255,255,0.38);
+      --stroke: rgba(255,255,255,0.55);
+
+      --btn: rgba(255,255,255,0.45);
+      --btnHover: rgba(255,255,255,0.62);
+
+      --primary: #2b6cff;
+      --primary2: #1f54d8;
+
+      --shadow1: rgba(21, 56, 120, 0.22);
+      --shadow2: rgba(0, 0, 0, 0.12);
+      --radius: 18px;
     }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      margin: 0;
-      background: linear-gradient(to bottom, var(--primary), var(--secondary));
-      color: var(--text-light);
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    *{ box-sizing: border-box; }
+
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--ink);
       min-height: 100vh;
-      padding: 24px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding: 26px;
+      background:
+        radial-gradient(1200px 600px at 50% -10%, #ffffff 0%, rgba(255,255,255,0.0) 55%),
+        linear-gradient(to bottom, var(--bgTop), var(--bgMid) 45%, var(--bgBot));
     }
 
-    .container {
-      max-width: 400px;
+    .wrap{
       width: 100%;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 16px;
-      padding: 32px 24px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      max-width: 420px;
+    }
+
+    .panel{
+      border-radius: var(--radius);
+      padding: 26px 20px 18px;
+      background: linear-gradient(180deg, var(--card) 0%, var(--card2) 100%);
+      border: 1px solid rgba(255,255,255,0.55);
+      box-shadow:
+        0 18px 42px var(--shadow1),
+        0 8px 18px var(--shadow2);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       text-align: center;
     }
 
-    h1 {
+    .brand{
+      display:flex;
+      flex-direction: column;
+      align-items:center;
+      gap: 10px;
+      margin-top: 2px;
+      margin-bottom: 12px;
+    }
+
+    .logoBadge{
+      width: 88px;
+      height: 88px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.78), rgba(255,255,255,0.38));
+      border: 1px solid rgba(255,255,255,0.60);
+      box-shadow: 0 14px 30px var(--shadow1);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    h1{
       font-size: 28px;
-      margin-bottom: 8px;
+      line-height: 1.1;
+      margin: 0;
+      font-weight: 800;
+      letter-spacing: -0.4px;
     }
 
-    .subtitle {
-      font-size: 18px;
-      margin-bottom: 24px;
-      opacity: 0.9;
+    .subtitle{
+      margin: 10px 0 18px;
+      font-size: 16px;
+      color: var(--inkSoft);
+      font-weight: 600;
     }
 
-    select, button {
+    .selectWrap{
+      margin: 0 0 14px;
+    }
+
+    select{
       width: 100%;
-      padding: 12px;
-      border-radius: 12px;
-      border: none;
-      margin-bottom: 16px;
+      padding: 13px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.65);
+      background: rgba(255,255,255,0.42);
+      color: var(--ink);
+      font-size: 16px;
+      font-weight: 600;
+      outline: none;
+      box-shadow: 0 10px 18px rgba(21,56,120,0.12);
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+
+    .selectChevron{
+      position: relative;
+    }
+    .selectChevron:after{
+      content: "▾";
+      position:absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: rgba(11,42,89,0.55);
       font-size: 16px;
     }
 
-    select {
-      background: rgba(255,255,255,0.15);
-      color: white;
-    }
-
-    button {
-      background-color: white;
-      color: var(--primary);
-      font-weight: 600;
+    .btn{
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.65);
+      background: var(--btn);
+      color: var(--ink);
+      font-size: 16px;
+      font-weight: 700;
       cursor: pointer;
-      transition: 0.2s;
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      justify-content:center;
+      box-shadow: 0 12px 20px rgba(21,56,120,0.14);
+      transition: transform 0.12s ease, background 0.12s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:hover{ background: var(--btnHover); }
+    .btn:active{ transform: translateY(1px) scale(0.995); }
+
+    .btnPrimary{
+      background: linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0.35));
+z);
     }
 
-    button:hover {
-      background-color: #e6f0ff;
+    .btnIcon{
+      width: 22px;
+      height: 22px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius: 999px;
+      background: rgba(43,108,255,0.14);
+      border: 1px solid rgba(43,108,255,0.18);
     }
 
-    .share-button {
-      background-color: rgba(255,255,255,0.15);
-      color: white;
-      border: 1px solid rgba(255,255,255,0.3);
+    .shareCard{
       margin-top: 16px;
+      padding: 16px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.48), rgba(255,255,255,0.30));
+      border: 1px solid rgba(255,255,255,0.60);
+      box-shadow: 0 14px 24px rgba(21,56,120,0.12);
     }
 
-    .footer {
+    .shareTitle{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 16px;
+      margin: 0 0 6px;
+      letter-spacing: -0.2px;
+    }
+
+    .shareHint{
+      margin: 0 0 12px;
+      font-size: 13px;
+      color: var(--inkSoft);
+      font-weight: 600;
+    }
+
+    .footer{
+      margin-top: 14px;
       font-size: 12px;
-      margin-top: 24px;
-      opacity: 0.6;
+      color: rgba(11,42,89,0.55);
+      font-weight: 600;
+    }
+
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      background: rgba(11, 42, 89, 0.90);
+      color: white;
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.20);
+    }
+    .toast.show{
+      opacity: 1;
+      transform: translateX(-50%) translateY(-2px);
+    }
+
+    /* Small screens */
+    @media (max-width: 380px){
+      .panel{ padding: 22px 16px 16px; }
+      h1{ font-size: 26px; }
     }
   </style>
 </head>
+
 <body>
-  <div class="container">
-    <h1>VoteCheck</h1>
-    <div class="subtitle">Are you ready to vote?</div>
+  <div class="wrap">
+    <div class="panel">
+      <div class="brand">
+        <div class="logoBadge" aria-label="Ballot Buddy logo">
+          <!-- Friendly "ballot box" SVG (clean, blue, no red) -->
+          <svg width="58" height="58" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+            <defs>
+              <linearGradient id="g1" x1="32" y1="2" x2="32" y2="62">
+                <stop stop-color="#2B6CFF"/>
+                <stop offset="1" stop-color="#1F54D8"/>
+              </linearGradient>
+              <linearGradient id="g2" x1="32" y1="10" x2="32" y2="58">
+                <stop stop-color="white" stop-opacity="0.95"/>
+                <stop offset="1" stop-color="white" stop-opacity="0.75"/>
+              </linearGradient>
+            </defs>
 
-    <select id="state-select">
-      <option>Select Your State</option>
-      <option>Alabama</option>
-      <option>Alaska</option>
-      <option>Arizona</option>
-      <option>Arkansas</option>
-      <option>California</option>
-      <!-- Add more states here -->
-    </select>
+            <!-- ballot -->
+            <path d="M24 10c0-2.2 1.8-4 4-4h12c2.2 0 4 1.8 4 4v6H24v-6Z" fill="url(#g2)" stroke="url(#g1)" stroke-width="2" />
+            <path d="M29 12l3 3 7-7" stroke="#2B6CFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
 
-    <button onclick="window.open('https://www.nass.org/can-I-vote', '_blank')">
-      Check My Registration
-    </button>
+            <!-- box -->
+            <path d="M14 22c0-3.3 2.7-6 6-6h24c3.3 0 6 2.7 6 6v26c0 5.5-4.5 10-10 10H24c-5.5 0-10-4.5-10-10V22Z" fill="url(#g2)" stroke="url(#g1)" stroke-width="2"/>
+            <path d="M24 28h16" stroke="#2B6CFF" stroke-opacity="0.35" stroke-width="3" stroke-linecap="round"/>
 
-    <button onclick="window.open('https://www.vote.org/voter-registration-deadlines/', '_blank')">
-      View Voting Deadlines
-    </button>
+            <!-- face -->
+            <circle cx="26" cy="38" r="2" fill="#0B2A59" fill-opacity="0.75"/>
+            <circle cx="38" cy="38" r="2" fill="#0B2A59" fill-opacity="0.75"/>
+            <path d="M28 44c2 2 6 2 8 0" stroke="#0B2A59" stroke-opacity="0.65" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </div>
 
-    <button onclick="window.open('https://www.vote.org/absentee-ballot/', '_blank')">
-      Request Absentee Ballot
-    </button>
+        <h1>Ballot Buddy</h1>
+      </div>
 
-    <button class="share-button" onclick="shareLink()">
-      Help a Friend Vote
-    </button>
+      <div class="subtitle">Are you ready to vote?</div>
 
-    <div class="footer">Powered by builtbyeljefe</div>
+      <div class="selectWrap selectChevron">
+        <select id="state-select" aria-label="Select your state">
+          <option value="">Select My State</option>
+          <option>Alabama</option>
+          <option>Alaska</option>
+          <option>Arizona</option>
+          <option>Arkansas</option>
+          <option>California</option>
+          <option>Colorado</option>
+          <option>Connecticut</option>
+          <option>Delaware</option>
+          <option>District of Columbia</option>
+          <option>Florida</option>
+          <option>Georgia</option>
+          <option>Hawaii</option>
+          <option>Idaho</option>
+          <option>Illinois</option>
+          <option>Indiana</option>
+          <option>Iowa</option>
+          <option>Kansas</option>
+          <option>Kentucky</option>
+          <option>Louisiana</option>
+          <option>Maine</option>
+          <option>Maryland</option>
+          <option>Massachusetts</option>
+          <option>Michigan</option>
+          <option>Minnesota</option>
+          <option>Mississippi</option>
+          <option>Missouri</option>
+          <option>Montana</option>
+          <option>Nebraska</option>
+          <option>Nevada</option>
+          <option>New Hampshire</option>
+          <option>New Jersey</option>
+          <option>New Mexico</option>
+          <option>New York</option>
+          <option>North Carolina</option>
+          <option>North Dakota</option>
+          <option>Ohio</option>
+          <option>Oklahoma</option>
+          <option>Oregon</option>
+          <option>Pennsylvania</option>
+          <option>Rhode Island</option>
+          <option>South Carolina</option>
+          <option>South Dakota</option>
+          <option>Tennessee</option>
+          <option>Texas</option>
+          <option>Utah</option>
+          <option>Vermont</option>
+          <option>Virginia</option>
+          <option>Washington</option>
+          <option>West Virginia</option>
+          <option>Wisconsin</option>
+          <option>Wyoming</option>
+        </select>
+      </div>
+
+      <button class="btn btnPrimary" id="btn-registration" type="button">
+        <span class="btnIcon" aria-hidden="true">✓</span>
+        Check My Registration
+      </button>
+
+      <button class="btn" id="btn-deadlines" type="button">
+        <span class="btnIcon" aria-hidden="true">🗓️</span>
+        View Voting Deadlines
+      </button>
+
+      <button class="btn" id="btn-absentee" type="button">
+        <span class="btnIcon" aria-hidden="true">✉️</span>
+        Request Absentee Ballot
+      </button>
+
+      <div class="shareCard">
+        <div class="shareTitle">
+          <span aria-hidden="true">👥</span>
+          Help a Friend Vote
+        </div>
+        <p class="shareHint">Share this with a friend, make a difference.</p>
+        <button class="btn" id="btn-share" type="button">
+          Share Ballot Buddy
+        </button>
+      </div>
+
+      <div class="footer">Powered by builtbyeljefe</div>
+    </div>
   </div>
 
+  <div class="toast" id="toast">Copied. Share it with a friend 💙</div>
+
   <script>
+    const APP_NAME = "Ballot Buddy";
+
+    // For now, we keep links universal (fast MVP). Later we can route by state.
+    const URL_REGISTRATION = "https://www.nass.org/can-I-vote";
+    const URL_DEADLINES = "https://www.vote.org/voter-registration-deadlines/";
+    const URL_ABSENTEE = "https://www.vote.org/absentee-ballot/";
+
+    const stateSelect = document.getElementById("state-select");
+
+    document.getElementById("btn-registration").addEventListener("click", () => open(URL_REGISTRATION));
+    document.getElementById("btn-deadlines").addEventListener("click", () => open(URL_DEADLINES));
+    document.getElementById("btn-absentee").addEventListener("click", () => open(URL_ABSENTEE));
+    document.getElementById("btn-share").addEventListener("click", shareLink);
+
+    // Optional: gently nudge them to pick a state first (still allows continuing).
+    stateSelect.addEventListener("change", () => {
+      if (stateSelect.value) {
+        showToast(`Selected: ${stateSelect.value}`);
+      }
+    });
+
+    function open(url) {
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+
     function shareLink() {
-      const message = "I just used VoteCheck to get ready to vote. You should too: https://votecheck.app";
+      const pageUrl = window.location.href;
+      const state = stateSelect.value ? ` (${stateSelect.value})` : "";
+      const message = `I just used ${APP_NAME}${state} to make sure I'm ready to vote. Super quick. ${pageUrl}`;
+
       if (navigator.share) {
         navigator.share({
-          title: "VoteCheck",
+          title: APP_NAME,
           text: message,
-          url: "https://votecheck.app"
-        });
+          url: pageUrl
+        }).catch(() => {});
       } else {
-        navigator.clipboard.writeText(message);
-        alert("Link copied! Share it with a friend 💙");
+        // Fallback for desktop browsers
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(message).then(() => {
+            showToast("Copied. Share it with a friend 💙");
+          }).catch(() => {
+            prompt("Copy this message:", message);
+          });
+        } else {
+          prompt("Copy this message:", message);
+        }
       }
+    }
+
+    function showToast(text) {
+      const toast = document.getElementById("toast");
+      toast.textContent = text;
+      toast.classList.add("show");
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => toast.classList.remove("show"), 1400);
     }
   </script>
 </body>
