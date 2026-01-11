@@ -47,10 +47,7 @@
         linear-gradient(to bottom, var(--bgTop), var(--bgMid) 45%, var(--bgBot));
     }
 
-    .wrap{
-      width: 100%;
-      max-width: 420px;
-    }
+    .wrap{ width: 100%; max-width: 420px; }
 
     .panel{
       border-radius: var(--radius);
@@ -101,9 +98,7 @@
       font-weight: 600;
     }
 
-    .selectWrap{
-      margin: 0 0 14px;
-    }
+    .selectWrap{ margin: 0 0 14px; }
 
     select{
       width: 100%;
@@ -121,9 +116,7 @@
       cursor: pointer;
     }
 
-    .selectChevron{
-      position: relative;
-    }
+    .selectChevron{ position: relative; }
     .selectChevron:after{
       content: "▾";
       position:absolute;
@@ -159,18 +152,28 @@
 
     .btnPrimary{
       background: linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0.35));
-z);
     }
 
     .btnIcon{
-      width: 22px;
-      height: 22px;
+      width: 24px;
+      height: 24px;
       display:inline-flex;
       align-items:center;
       justify-content:center;
       border-radius: 999px;
       background: rgba(43,108,255,0.14);
       border: 1px solid rgba(43,108,255,0.18);
+      flex: 0 0 auto;
+    }
+
+    .ico{
+      width: 16px;
+      height: 16px;
+      stroke: var(--primary2);
+      stroke-width: 2.2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
 
     .shareCard{
@@ -228,7 +231,6 @@ z);
       transform: translateX(-50%) translateY(-2px);
     }
 
-    /* Small screens */
     @media (max-width: 380px){
       .panel{ padding: 22px 16px 16px; }
       h1{ font-size: 26px; }
@@ -254,15 +256,12 @@ z);
               </linearGradient>
             </defs>
 
-            <!-- ballot -->
             <path d="M24 10c0-2.2 1.8-4 4-4h12c2.2 0 4 1.8 4 4v6H24v-6Z" fill="url(#g2)" stroke="url(#g1)" stroke-width="2" />
             <path d="M29 12l3 3 7-7" stroke="#2B6CFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
 
-            <!-- box -->
             <path d="M14 22c0-3.3 2.7-6 6-6h24c3.3 0 6 2.7 6 6v26c0 5.5-4.5 10-10 10H24c-5.5 0-10-4.5-10-10V22Z" fill="url(#g2)" stroke="url(#g1)" stroke-width="2"/>
             <path d="M24 28h16" stroke="#2B6CFF" stroke-opacity="0.35" stroke-width="3" stroke-linecap="round"/>
 
-            <!-- face -->
             <circle cx="26" cy="38" r="2" fill="#0B2A59" fill-opacity="0.75"/>
             <circle cx="38" cy="38" r="2" fill="#0B2A59" fill-opacity="0.75"/>
             <path d="M28 44c2 2 6 2 8 0" stroke="#0B2A59" stroke-opacity="0.65" stroke-width="3" stroke-linecap="round"/>
@@ -332,27 +331,61 @@ z);
       </div>
 
       <button class="btn btnPrimary" id="btn-registration" type="button">
-        <span class="btnIcon" aria-hidden="true">✓</span>
+        <span class="btnIcon" aria-hidden="true">
+          <!-- Check icon -->
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20 6L9 17l-5-5"></path>
+          </svg>
+        </span>
         Check My Registration
       </button>
 
       <button class="btn" id="btn-deadlines" type="button">
-        <span class="btnIcon" aria-hidden="true">🗓️</span>
+        <span class="btnIcon" aria-hidden="true">
+          <!-- Calendar icon -->
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M8 3v3M16 3v3"></path>
+            <path d="M4 7h16"></path>
+            <path d="M6 5h12a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"></path>
+            <path d="M8 11h3M13 11h3M8 15h3M13 15h3"></path>
+          </svg>
+        </span>
         View Voting Deadlines
       </button>
 
       <button class="btn" id="btn-absentee" type="button">
-        <span class="btnIcon" aria-hidden="true">✉️</span>
+        <span class="btnIcon" aria-hidden="true">
+          <!-- Envelope icon -->
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h16v10H4z"></path>
+            <path d="M4 7l8 6 8-6"></path>
+          </svg>
+        </span>
         Request Absentee Ballot
       </button>
 
       <div class="shareCard">
         <div class="shareTitle">
-          <span aria-hidden="true">👥</span>
+          <!-- Users icon -->
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px;">
+            <path d="M16 11a3 3 0 1 0-3-3 3 3 0 0 0 3 3z"></path>
+            <path d="M6.5 11a2.5 2.5 0 1 0-2.5-2.5A2.5 2.5 0 0 0 6.5 11z"></path>
+            <path d="M21 20a5 5 0 0 0-10 0"></path>
+            <path d="M11 20a4.5 4.5 0 0 0-9 0"></path>
+          </svg>
           Help a Friend Vote
         </div>
         <p class="shareHint">Share this with a friend, make a difference.</p>
         <button class="btn" id="btn-share" type="button">
+          <span class="btnIcon" aria-hidden="true">
+            <!-- Share icon -->
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 5v10"></path>
+              <path d="M8 8l4-4 4 4"></path>
+              <path d="M5 19h14a2 2 0 0 0 2-2v-3"></path>
+              <path d="M3 14v3a2 2 0 0 0 2 2"></path>
+            </svg>
+          </span>
           Share Ballot Buddy
         </button>
       </div>
@@ -366,27 +399,61 @@ z);
   <script>
     const APP_NAME = "Ballot Buddy";
 
-    // For now, we keep links universal (fast MVP). Later we can route by state.
-    const URL_REGISTRATION = "https://www.nass.org/can-I-vote";
-    const URL_DEADLINES = "https://www.vote.org/voter-registration-deadlines/";
-    const URL_ABSENTEE = "https://www.vote.org/absentee-ballot/";
+    // Fallback (no state selected)
+    const URL_CHECK_FALLBACK = "https://www.vote.org/am-i-registered-to-vote/";
+    const URL_DEADLINES_FALLBACK = "https://www.vote.org/voter-registration-deadlines/";
+    const URL_ABSENTEE_FALLBACK = "https://www.vote.org/absentee-ballot/";
 
     const stateSelect = document.getElementById("state-select");
 
-    document.getElementById("btn-registration").addEventListener("click", () => open(URL_REGISTRATION));
-    document.getElementById("btn-deadlines").addEventListener("click", () => open(URL_DEADLINES));
-    document.getElementById("btn-absentee").addEventListener("click", () => open(URL_ABSENTEE));
+    document.getElementById("btn-registration").addEventListener("click", openRegistrationCheck);
+    document.getElementById("btn-deadlines").addEventListener("click", openDeadlines);
+    document.getElementById("btn-absentee").addEventListener("click", openAbsentee);
     document.getElementById("btn-share").addEventListener("click", shareLink);
 
-    // Optional: gently nudge them to pick a state first (still allows continuing).
     stateSelect.addEventListener("change", () => {
-      if (stateSelect.value) {
-        showToast(`Selected: ${stateSelect.value}`);
-      }
+      if (stateSelect.value) showToast(`Selected: ${stateSelect.value}`);
     });
+
+    function stateSlug(name) {
+      // vote.org uses lowercase with hyphens (example: "District of Columbia" -> "district-of-columbia")
+      return name
+        .trim()
+        .toLowerCase()
+        .replace(/[.]/g, "")
+        .replace(/\s+/g, "-");
+    }
 
     function open(url) {
       window.open(url, "_blank", "noopener,noreferrer");
+    }
+
+    function openRegistrationCheck() {
+      const state = stateSelect.value;
+      if (!state) return open(URL_CHECK_FALLBACK);
+
+      // State tools page includes "Check Your Registration" for that state
+      // Example format: https://www.vote.org/alabama/
+      const slug = stateSlug(state);
+      open(`https://www.vote.org/${slug}/`);
+    }
+
+    function openDeadlines() {
+      const state = stateSelect.value;
+      if (!state) return open(URL_DEADLINES_FALLBACK);
+
+      // State page includes dates, deadlines, rules, and links
+      const slug = stateSlug(state);
+      open(`https://www.vote.org/${slug}/`);
+    }
+
+    function openAbsentee() {
+      const state = stateSelect.value;
+      if (!state) return open(URL_ABSENTEE_FALLBACK);
+
+      // Example format: https://www.vote.org/absentee-ballot/alabama/
+      const slug = stateSlug(state);
+      open(`https://www.vote.org/absentee-ballot/${slug}/`);
     }
 
     function shareLink() {
@@ -401,7 +468,6 @@ z);
           url: pageUrl
         }).catch(() => {});
       } else {
-        // Fallback for desktop browsers
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(message).then(() => {
             showToast("Copied. Share it with a friend 💙");
