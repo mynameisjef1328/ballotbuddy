@@ -1,1 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VoteCheck</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap">
+  <style>
+    :root {
+      --primary: #2563EB;
+      --secondary: #3B82F6;
+      --text-light: #ffffff;
+      --bg-light: #f9fafb;
+    }
 
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      background: linear-gradient(to bottom, var(--primary), var(--secondary));
+      color: var(--text-light);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 400px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 32px 24px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      margin-bottom: 24px;
+      opacity: 0.9;
+    }
+
+    select, button {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
+      margin-bottom: 16px;
+      font-size: 16px;
+    }
+
+    select {
+      background: rgba(255,255,255,0.15);
+      color: white;
+    }
+
+    button {
+      background-color: white;
+      color: var(--primary);
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background-color: #e6f0ff;
+    }
+
+    .share-button {
+      background-color: rgba(255,255,255,0.15);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.3);
+      margin-top: 16px;
+    }
+
+    .footer {
+      font-size: 12px;
+      margin-top: 24px;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>VoteCheck</h1>
+    <div class="subtitle">Are you ready to vote?</div>
+
+    <select id="state-select">
+      <option>Select Your State</option>
+      <option>Alabama</option>
+      <option>Alaska</option>
+      <option>Arizona</option>
+      <option>Arkansas</option>
+      <option>California</option>
+      <!-- Add more states here -->
+    </select>
+
+    <button onclick="window.open('https://www.nass.org/can-I-vote', '_blank')">
+      Check My Registration
+    </button>
+
+    <button onclick="window.open('https://www.vote.org/voter-registration-deadlines/', '_blank')">
+      View Voting Deadlines
+    </button>
+
+    <button onclick="window.open('https://www.vote.org/absentee-ballot/', '_blank')">
+      Request Absentee Ballot
+    </button>
+
+    <button class="share-button" onclick="shareLink()">
+      Help a Friend Vote
+    </button>
+
+    <div class="footer">Powered by builtbyeljefe</div>
+  </div>
+
+  <script>
+    function shareLink() {
+      const message = "I just used VoteCheck to get ready to vote. You should too: https://votecheck.app";
+      if (navigator.share) {
+        navigator.share({
+          title: "VoteCheck",
+          text: message,
+          url: "https://votecheck.app"
+        });
+      } else {
+        navigator.clipboard.writeText(message);
+        alert("Link copied! Share it with a friend 💙");
+      }
+    }
+  </script>
+</body>
+</html>
