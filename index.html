@@ -540,14 +540,13 @@
         </div>
       </div>
 
-<div class="footer">
-  <span>Powered by builtbyeljefe</span>
-  <span class="dot">·</span>
-  <a class="footerLink" id="link-privacy" href="privacy.html">Privacy</a>
-  <span class="dot">·</span>
-  <a class="footerLink" id="link-support" href="support.html">Support</a>
-</div>
-      
+      <div class="footer">
+        <span>Powered by builtbyeljefe</span>
+        <span class="dot">·</span>
+        <a class="footerLink" id="link-privacy" href="privacy.html">Privacy</a>
+        <span class="dot">·</span>
+        <a class="footerLink" id="link-support" href="support.html">Support</a>
+      </div>
     </div>
   </div>
 
@@ -576,91 +575,18 @@
   </div>
 
   <script>
+    "use strict";
+
     const APP_NAME = "Ballot Buddy";
 
-    <script>
-  const APP_NAME = "Ballot Buddy";
+    // Official destinations
+    const URL_CHECK = "https://www.vote.org/am-i-registered-to-vote/";
+    const URL_DEADLINES = "https://www.vote.org/voter-registration-deadlines/";
+    const URL_ABSENTEE_BASE = "https://www.vote.org/absentee-ballot/";
+    const URL_POLLING = "https://www.vote.org/polling-place-locator/";
+    const URL_REMINDERS = "https://www.vote.org/election-reminders/";
 
-  // --- Local page resolver (fixes GH Pages case/path 404s) ---
-  async function goLocalPage(candidates){
-    for (const path of candidates){
-      try{
-        const res = await fetch(path, { method: "HEAD", cache: "no-store" });
-        if (res.ok){
-          window.location.href = path;
-          return;
-        }
-      }catch(e){}
-    }
-    // fallback, at least attempt the first
-    window.location.href = candidates[0];
-  }
-
-  // Attach after DOM exists
-  window.addEventListener("DOMContentLoaded", () => {
-    const privacy = document.getElementById("link-privacy");
-    const support = document.getElementById("link-support");
-
-    if (privacy){
-      privacy.addEventListener("click", (e) => {
-        e.preventDefault();
-        goLocalPage([
-          "privacy.html",
-          "Privacy.html",
-          "privacy/",
-          "Privacy/",
-          "privacy/index.html",
-          "Privacy/index.html"
-        ]);
-      });
-    }
-
-    if (support){
-      support.addEventListener("click", (e) => {
-        e.preventDefault();
-        goLocalPage([
-          "support.html",
-          "Support.html",
-          "support/",
-          "Support/",
-          "support/index.html",
-          "Support/index.html"
-        ]);
-      });
-    }
-  });
-
-  // Reliable destinations
-  const URL_CHECK = "https://www.vote.org/am-i-registered-to-vote/";
-  const URL_DEADLINES = "https://www.vote.org/voter-registration-deadlines/";
-  const URL_ABSENTEE_BASE = "https://www.vote.org/absentee-ballot/";
-  const URL_POLLING = "https://www.vote.org/polling-place-locator/";
-  const URL_REMINDERS = "https://www.vote.org/election-reminders/";
-
-  const stateSelect = document.getElementById("state-select");
-
-    document.getElementById("btn-registration").addEventListener("click", () => safeOpen(URL_CHECK));
-    document.getElementById("btn-deadlines").addEventListener("click", () => safeOpen(URL_DEADLINES));
-    document.getElementById("btn-absentee").addEventListener("click", openAbsentee);
-    document.getElementById("btn-polling").addEventListener("click", () => safeOpen(URL_POLLING));
-    document.getElementById("btn-reminders").addEventListener("click", () => safeOpen(URL_REMINDERS));
-    document.getElementById("btn-share").addEventListener("click", shareLink);
-
-    document.getElementById("btn-trust").addEventListener("click", openTrustModal);
-    document.getElementById("trustClose").addEventListener("click", closeTrustModal);
-    document.getElementById("trustOk").addEventListener("click", closeTrustModal);
-
-    document.getElementById("trustOverlay").addEventListener("click", (e) => {
-      if (e.target.id === "trustOverlay") closeTrustModal();
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeTrustModal();
-    });
-
-    stateSelect.addEventListener("change", () => {
-      if (stateSelect.value) showToast(`Selected: ${stateSelect.value}`);
-    });
+    function byId(id){ return document.getElementById(id); }
 
     function stateSlug(name) {
       return name.trim().toLowerCase().replace(/[.]/g, "").replace(/\s+/g, "-");
@@ -670,15 +596,24 @@
       window.open(url, "_blank", "noopener,noreferrer");
     }
 
-    function openAbsentee() {
-      const state = stateSelect.value;
+    function openAbsentee(stateSelect) {
+      const state = stateSelect && stateSelect.value;
       if (!state) return safeOpen(URL_ABSENTEE_BASE);
       safeOpen(URL_ABSENTEE_BASE + stateSlug(state) + "/");
     }
 
-    function shareLink() {
+    function showToast(text) {
+      const toast = byId("toast");
+      if (!toast) return;
+      toast.textContent = text;
+      toast.classList.add("show");
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => toast.classList.remove("show"), 1400);
+    }
+
+    function shareLink(stateSelect) {
       const pageUrl = window.location.href;
-      const state = stateSelect.value ? ` (${stateSelect.value})` : "";
+      const state = stateSelect && stateSelect.value ? ` (${stateSelect.value})` : "";
 
       const variants = [
         `Quick voting prep tool: ${APP_NAME}${state}. Check registration, deadlines, polling place, and reminders in under a minute. ${pageUrl}`,
@@ -692,38 +627,89 @@
 
       if (navigator.share) {
         navigator.share({ title: APP_NAME, text: message, url: pageUrl }).catch(() => {});
-      } else {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(message).then(() => {
-            showToast("Copied. Share it with a friend 💙");
-          }).catch(() => {
-            prompt("Copy this message:", message);
-          });
-        } else {
-          prompt("Copy this message:", message);
-        }
+        return;
       }
-    }
 
-    function showToast(text) {
-      const toast = document.getElementById("toast");
-      toast.textContent = text;
-      toast.classList.add("show");
-      clearTimeout(window.__toastTimer);
-      window.__toastTimer = setTimeout(() => toast.classList.remove("show"), 1400);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(message).then(() => {
+          showToast("Copied. Share it with a friend 💙");
+        }).catch(() => {
+          prompt("Copy this message:", message);
+        });
+        return;
+      }
+
+      prompt("Copy this message:", message);
     }
 
     function openTrustModal() {
-      const overlay = document.getElementById("trustOverlay");
+      const overlay = byId("trustOverlay");
+      if (!overlay) return;
       overlay.classList.add("show");
       overlay.setAttribute("aria-hidden", "false");
     }
 
     function closeTrustModal() {
-      const overlay = document.getElementById("trustOverlay");
+      const overlay = byId("trustOverlay");
+      if (!overlay) return;
       overlay.classList.remove("show");
       overlay.setAttribute("aria-hidden", "true");
     }
+
+    function fixLocalLink(anchorId, filename){
+      const a = byId(anchorId);
+      if (!a) return;
+      a.href = new URL(filename, window.location.href).href;
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const stateSelect = byId("state-select");
+
+      // Fix GH Pages paths for these local pages
+      fixLocalLink("link-privacy", "privacy.html");
+      fixLocalLink("link-support", "support.html");
+
+      // Button wiring
+      const btnRegistration = byId("btn-registration");
+      const btnDeadlines = byId("btn-deadlines");
+      const btnAbsentee = byId("btn-absentee");
+      const btnPolling = byId("btn-polling");
+      const btnReminders = byId("btn-reminders");
+      const btnShare = byId("btn-share");
+
+      if (btnRegistration) btnRegistration.addEventListener("click", () => safeOpen(URL_CHECK));
+      if (btnDeadlines) btnDeadlines.addEventListener("click", () => safeOpen(URL_DEADLINES));
+      if (btnAbsentee) btnAbsentee.addEventListener("click", () => openAbsentee(stateSelect));
+      if (btnPolling) btnPolling.addEventListener("click", () => safeOpen(URL_POLLING));
+      if (btnReminders) btnReminders.addEventListener("click", () => safeOpen(URL_REMINDERS));
+      if (btnShare) btnShare.addEventListener("click", () => shareLink(stateSelect));
+
+      // Trust modal wiring
+      const btnTrust = byId("btn-trust");
+      const trustClose = byId("trustClose");
+      const trustOk = byId("trustOk");
+      const trustOverlay = byId("trustOverlay");
+
+      if (btnTrust) btnTrust.addEventListener("click", openTrustModal);
+      if (trustClose) trustClose.addEventListener("click", closeTrustModal);
+      if (trustOk) trustOk.addEventListener("click", closeTrustModal);
+
+      if (trustOverlay) {
+        trustOverlay.addEventListener("click", (e) => {
+          if (e.target && e.target.id === "trustOverlay") closeTrustModal();
+        });
+      }
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeTrustModal();
+      });
+
+      if (stateSelect) {
+        stateSelect.addEventListener("change", () => {
+          if (stateSelect.value) showToast(`Selected: ${stateSelect.value}`);
+        });
+      }
+    });
   </script>
 </body>
 </html>
