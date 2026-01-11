@@ -8,31 +8,24 @@
 
   <style>
     :root{
-      /* Ballot Buddy inverted (matches attached vibe) */
-      --bgTop: #f3f8ff;
-      --bgMid: #dbeaff;
-      --bgBot: #b9d5ff;
-
+      /* Ballot Buddy inverted (panel stays “screen blue”) */
       --ink: #ffffff;
       --inkSoft: rgba(255,255,255,0.84);
 
-      /* Deep “screen blue” card */
       --cardTop: rgba(48, 132, 255, 0.92);
       --cardBot: rgba(26, 96, 224, 0.92);
 
-      /* Tiles */
       --tile: rgba(255,255,255,0.14);
       --tileHover: rgba(255,255,255,0.20);
       --stroke: rgba(255,255,255,0.18);
-
-      /* Warm blues */
-      --warm1: #9fd2ff;
-      --warm2: #cfe8ff;
 
       --shadow1: rgba(10, 35, 90, 0.34);
       --shadow2: rgba(0, 0, 0, 0.18);
 
       --radius: 20px;
+
+      /* spacing */
+      --gap: 12px;
     }
 
     *{ box-sizing: border-box; }
@@ -40,17 +33,28 @@
     body{
       margin: 0;
       min-height: 100vh;
-      padding: 26px;
+
+      /* nicer iPhone safe-area padding */
+      padding:
+        calc(22px + env(safe-area-inset-top))
+        calc(22px + env(safe-area-inset-right))
+        calc(22px + env(safe-area-inset-bottom))
+        calc(22px + env(safe-area-inset-left));
+
       display: flex;
       justify-content: center;
       align-items: center;
+
       font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-
-      background:
-        radial-gradient(1200px 600px at 50% -12%, #ffffff 0%, rgba(255,255,255,0) 60%),
-        linear-gradient(to bottom, var(--bgTop), var(--bgMid) 52%, var(--bgBot));
-
       color: var(--ink);
+
+      /* Less white, more blue “app backdrop” */
+      background:
+        radial-gradient(900px 520px at 50% -10%, rgba(183, 215, 255, 0.95) 0%, rgba(183, 215, 255, 0) 62%),
+        radial-gradient(820px 520px at 15% 95%, rgba(26, 96, 224, 0.35) 0%, rgba(26, 96, 224, 0) 58%),
+        linear-gradient(180deg, #cfe3ff 0%, #9fc7ff 46%, #6aa6ff 100%);
+
+      background-attachment: fixed;
     }
 
     .wrap{
@@ -92,7 +96,7 @@
       align-items:center;
       gap: 10px;
       margin-top: 2px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       position: relative;
       z-index: 1;
     }
@@ -127,7 +131,16 @@
       z-index: 1;
     }
 
-    .selectWrap{ margin: 0 0 14px; position: relative; z-index: 1; }
+    /* NEW: stack adds spacing between dropdown, buttons, and share card */
+    .stack{
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap);
+      position: relative;
+      z-index: 1;
+    }
+
+    .selectWrap{ position: relative; }
 
     select{
       width: 100%;
@@ -145,7 +158,6 @@
       cursor: pointer;
     }
 
-    .selectChevron{ position: relative; }
     .selectChevron:after{
       content: "▾";
       position:absolute;
@@ -177,8 +189,6 @@
       transition: transform 0.12s ease, background 0.12s ease;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
-      position: relative;
-      z-index: 1;
     }
 
     .btn:hover{ background: var(--tileHover); }
@@ -212,14 +222,11 @@
     }
 
     .shareCard{
-      margin-top: 16px;
       padding: 16px;
       border-radius: 16px;
       background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.08));
       border: 1px solid rgba(255,255,255,0.18);
       box-shadow: 0 14px 24px rgba(0,0,0,0.12);
-      position: relative;
-      z-index: 1;
     }
 
     .shareTitle{
@@ -273,7 +280,6 @@
     @media (max-width: 380px){
       .panel{ padding: 22px 16px 16px; }
       h1{ font-size: 26px; }
-      .btn{ justify-content: flex-start; }
     }
   </style>
 </head>
@@ -296,15 +302,12 @@
               </linearGradient>
             </defs>
 
-            <!-- ballot -->
             <path d="M24 10c0-2.2 1.8-4 4-4h12c2.2 0 4 1.8 4 4v6H24v-6Z" fill="url(#g2)" stroke="url(#g1)" stroke-width="2" />
             <path d="M29 12l3 3 7-7" stroke="#1F54D8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
 
-            <!-- box -->
             <path d="M14 22c0-3.3 2.7-6 6-6h24c3.3 0 6 2.7 6 6v26c0 5.5-4.5 10-10 10H24c-5.5 0-10-4.5-10-10V22Z" fill="url(#g2)" stroke="url(#g1)" stroke-width="2"/>
             <path d="M24 28h16" stroke="#CFE8FF" stroke-opacity="0.55" stroke-width="3" stroke-linecap="round"/>
 
-            <!-- face -->
             <circle cx="26" cy="38" r="2" fill="#0B2A59" fill-opacity="0.70"/>
             <circle cx="38" cy="38" r="2" fill="#0B2A59" fill-opacity="0.70"/>
             <path d="M28 44c2 2 6 2 8 0" stroke="#0B2A59" stroke-opacity="0.62" stroke-width="3" stroke-linecap="round"/>
@@ -316,116 +319,73 @@
 
       <div class="subtitle">Are you ready to vote?</div>
 
-      <div class="selectWrap selectChevron">
-        <select id="state-select" aria-label="Select your state">
-          <option value="">Select My State</option>
-          <option>Alabama</option>
-          <option>Alaska</option>
-          <option>Arizona</option>
-          <option>Arkansas</option>
-          <option>California</option>
-          <option>Colorado</option>
-          <option>Connecticut</option>
-          <option>Delaware</option>
-          <option>District of Columbia</option>
-          <option>Florida</option>
-          <option>Georgia</option>
-          <option>Hawaii</option>
-          <option>Idaho</option>
-          <option>Illinois</option>
-          <option>Indiana</option>
-          <option>Iowa</option>
-          <option>Kansas</option>
-          <option>Kentucky</option>
-          <option>Louisiana</option>
-          <option>Maine</option>
-          <option>Maryland</option>
-          <option>Massachusetts</option>
-          <option>Michigan</option>
-          <option>Minnesota</option>
-          <option>Mississippi</option>
-          <option>Missouri</option>
-          <option>Montana</option>
-          <option>Nebraska</option>
-          <option>Nevada</option>
-          <option>New Hampshire</option>
-          <option>New Jersey</option>
-          <option>New Mexico</option>
-          <option>New York</option>
-          <option>North Carolina</option>
-          <option>North Dakota</option>
-          <option>Ohio</option>
-          <option>Oklahoma</option>
-          <option>Oregon</option>
-          <option>Pennsylvania</option>
-          <option>Rhode Island</option>
-          <option>South Carolina</option>
-          <option>South Dakota</option>
-          <option>Tennessee</option>
-          <option>Texas</option>
-          <option>Utah</option>
-          <option>Vermont</option>
-          <option>Virginia</option>
-          <option>Washington</option>
-          <option>West Virginia</option>
-          <option>Wisconsin</option>
-          <option>Wyoming</option>
-        </select>
-      </div>
-
-      <button class="btn btnPrimary" id="btn-registration" type="button">
-        <span class="btnIcon" aria-hidden="true">
-          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M20 6L9 17l-5-5"></path>
-          </svg>
-        </span>
-        Check My Registration
-      </button>
-
-      <button class="btn" id="btn-deadlines" type="button">
-        <span class="btnIcon" aria-hidden="true">
-          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M8 3v3M16 3v3"></path>
-            <path d="M4 7h16"></path>
-            <path d="M6 5h12a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"></path>
-            <path d="M8 11h3M13 11h3M8 15h3M13 15h3"></path>
-          </svg>
-        </span>
-        View Voting Deadlines
-      </button>
-
-      <button class="btn" id="btn-absentee" type="button">
-        <span class="btnIcon" aria-hidden="true">
-          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M4 7h16v10H4z"></path>
-            <path d="M4 7l8 6 8-6"></path>
-          </svg>
-        </span>
-        Request Absentee Ballot
-      </button>
-
-      <div class="shareCard">
-        <div class="shareTitle">
-          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px;">
-            <path d="M16 11a3 3 0 1 0-3-3 3 3 0 0 0 3 3z"></path>
-            <path d="M6.5 11a2.5 2.5 0 1 0-2.5-2.5A2.5 2.5 0 0 0 6.5 11z"></path>
-            <path d="M21 20a5 5 0 0 0-10 0"></path>
-            <path d="M11 20a4.5 4.5 0 0 0-9 0"></path>
-          </svg>
-          Help a Friend Vote
+      <div class="stack">
+        <div class="selectWrap selectChevron">
+          <select id="state-select" aria-label="Select your state">
+            <option value="">Select My State</option>
+            <option>Alabama</option><option>Alaska</option><option>Arizona</option><option>Arkansas</option><option>California</option>
+            <option>Colorado</option><option>Connecticut</option><option>Delaware</option><option>District of Columbia</option><option>Florida</option>
+            <option>Georgia</option><option>Hawaii</option><option>Idaho</option><option>Illinois</option><option>Indiana</option>
+            <option>Iowa</option><option>Kansas</option><option>Kentucky</option><option>Louisiana</option><option>Maine</option>
+            <option>Maryland</option><option>Massachusetts</option><option>Michigan</option><option>Minnesota</option><option>Mississippi</option>
+            <option>Missouri</option><option>Montana</option><option>Nebraska</option><option>Nevada</option><option>New Hampshire</option>
+            <option>New Jersey</option><option>New Mexico</option><option>New York</option><option>North Carolina</option><option>North Dakota</option>
+            <option>Ohio</option><option>Oklahoma</option><option>Oregon</option><option>Pennsylvania</option><option>Rhode Island</option>
+            <option>South Carolina</option><option>South Dakota</option><option>Tennessee</option><option>Texas</option><option>Utah</option>
+            <option>Vermont</option><option>Virginia</option><option>Washington</option><option>West Virginia</option><option>Wisconsin</option>
+            <option>Wyoming</option>
+          </select>
         </div>
-        <p class="shareHint">Share this with a friend, make a difference.</p>
-        <button class="btn" id="btn-share" type="button" style="justify-content:center;">
+
+        <button class="btn btnPrimary" id="btn-registration" type="button">
+          <span class="btnIcon" aria-hidden="true">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg>
+          </span>
+          Check My Registration
+        </button>
+
+        <button class="btn" id="btn-deadlines" type="button">
           <span class="btnIcon" aria-hidden="true">
             <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 5v10"></path>
-              <path d="M8 8l4-4 4 4"></path>
-              <path d="M5 19h14a2 2 0 0 0 2-2v-3"></path>
-              <path d="M3 14v3a2 2 0 0 0 2 2"></path>
+              <path d="M8 3v3M16 3v3"></path><path d="M4 7h16"></path>
+              <path d="M6 5h12a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"></path>
+              <path d="M8 11h3M13 11h3M8 15h3M13 15h3"></path>
             </svg>
           </span>
-          Share Ballot Buddy
+          View Voting Deadlines
         </button>
+
+        <button class="btn" id="btn-absentee" type="button">
+          <span class="btnIcon" aria-hidden="true">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 7h16v10H4z"></path><path d="M4 7l8 6 8-6"></path>
+            </svg>
+          </span>
+          Request Absentee Ballot
+        </button>
+
+        <div class="shareCard">
+          <div class="shareTitle">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px;">
+              <path d="M16 11a3 3 0 1 0-3-3 3 3 0 0 0 3 3z"></path>
+              <path d="M6.5 11a2.5 2.5 0 1 0-2.5-2.5A2.5 2.5 0 0 0 6.5 11z"></path>
+              <path d="M21 20a5 5 0 0 0-10 0"></path>
+              <path d="M11 20a4.5 4.5 0 0 0-9 0"></path>
+            </svg>
+            Help a Friend Vote
+          </div>
+          <p class="shareHint">Share this with a friend, make a difference.</p>
+
+          <button class="btn" id="btn-share" type="button" style="justify-content:center; margin-top: 10px;">
+            <span class="btnIcon" aria-hidden="true">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 5v10"></path><path d="M8 8l4-4 4 4"></path>
+                <path d="M5 19h14a2 2 0 0 0 2-2v-3"></path><path d="M3 14v3a2 2 0 0 0 2 2"></path>
+              </svg>
+            </span>
+            Share Ballot Buddy
+          </button>
+        </div>
       </div>
 
       <div class="footer">Powered by builtbyeljefe</div>
@@ -437,7 +397,6 @@
   <script>
     const APP_NAME = "Ballot Buddy";
 
-    // Fallback (no state selected)
     const URL_CHECK_FALLBACK = "https://www.vote.org/am-i-registered-to-vote/";
     const URL_DEADLINES_FALLBACK = "https://www.vote.org/voter-registration-deadlines/";
     const URL_ABSENTEE_FALLBACK = "https://www.vote.org/absentee-ballot/";
@@ -454,11 +413,7 @@
     });
 
     function stateSlug(name) {
-      return name
-        .trim()
-        .toLowerCase()
-        .replace(/[.]/g, "")
-        .replace(/\s+/g, "-");
+      return name.trim().toLowerCase().replace(/[.]/g, "").replace(/\s+/g, "-");
     }
 
     function open(url) {
