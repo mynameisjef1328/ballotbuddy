@@ -4,62 +4,86 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Ballot Buddy</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap">
 
   <style>
     :root{
-      /* Ballot Buddy theme (warm blues, no red) */
-      --bgTop: #e9f1ff;
-      --bgMid: #cfe2ff;
-      --bgBot: #8bb6ff;
+      /* Ballot Buddy inverted (matches attached vibe) */
+      --bgTop: #f3f8ff;
+      --bgMid: #dbeaff;
+      --bgBot: #b9d5ff;
 
-      --ink: #0b2a59;
-      --inkSoft: rgba(11, 42, 89, 0.70);
+      --ink: #ffffff;
+      --inkSoft: rgba(255,255,255,0.84);
 
-      --card: rgba(255,255,255,0.58);
-      --card2: rgba(255,255,255,0.38);
-      --stroke: rgba(255,255,255,0.55);
+      /* Deep “screen blue” card */
+      --cardTop: rgba(48, 132, 255, 0.92);
+      --cardBot: rgba(26, 96, 224, 0.92);
 
-      --btn: rgba(255,255,255,0.45);
-      --btnHover: rgba(255,255,255,0.62);
+      /* Tiles */
+      --tile: rgba(255,255,255,0.14);
+      --tileHover: rgba(255,255,255,0.20);
+      --stroke: rgba(255,255,255,0.18);
 
-      --primary: #2b6cff;
-      --primary2: #1f54d8;
+      /* Warm blues */
+      --warm1: #9fd2ff;
+      --warm2: #cfe8ff;
 
-      --shadow1: rgba(21, 56, 120, 0.22);
-      --shadow2: rgba(0, 0, 0, 0.12);
-      --radius: 18px;
+      --shadow1: rgba(10, 35, 90, 0.34);
+      --shadow2: rgba(0, 0, 0, 0.18);
+
+      --radius: 20px;
     }
 
     *{ box-sizing: border-box; }
 
     body{
-      margin:0;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color: var(--ink);
+      margin: 0;
       min-height: 100vh;
-      display:flex;
-      justify-content:center;
-      align-items:center;
       padding: 26px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+
       background:
-        radial-gradient(1200px 600px at 50% -10%, #ffffff 0%, rgba(255,255,255,0.0) 55%),
-        linear-gradient(to bottom, var(--bgTop), var(--bgMid) 45%, var(--bgBot));
+        radial-gradient(1200px 600px at 50% -12%, #ffffff 0%, rgba(255,255,255,0) 60%),
+        linear-gradient(to bottom, var(--bgTop), var(--bgMid) 52%, var(--bgBot));
+
+      color: var(--ink);
     }
 
-    .wrap{ width: 100%; max-width: 420px; }
+    .wrap{
+      width: 100%;
+      max-width: 420px;
+    }
 
     .panel{
       border-radius: var(--radius);
       padding: 26px 20px 18px;
-      background: linear-gradient(180deg, var(--card) 0%, var(--card2) 100%);
-      border: 1px solid rgba(255,255,255,0.55);
+      background: linear-gradient(180deg, var(--cardTop) 0%, var(--cardBot) 100%);
+      border: 1px solid rgba(255,255,255,0.18);
+
       box-shadow:
-        0 18px 42px var(--shadow1),
-        0 8px 18px var(--shadow2);
+        0 18px 46px var(--shadow1),
+        0 10px 22px var(--shadow2);
+
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
+
       text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* subtle glow like the mock */
+    .panel:before{
+      content:"";
+      position:absolute;
+      inset:-60px -60px auto -60px;
+      height: 220px;
+      background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.28), rgba(255,255,255,0));
+      pointer-events:none;
     }
 
     .brand{
@@ -69,15 +93,17 @@
       gap: 10px;
       margin-top: 2px;
       margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
     }
 
     .logoBadge{
-      width: 88px;
-      height: 88px;
-      border-radius: 24px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.78), rgba(255,255,255,0.38));
-      border: 1px solid rgba(255,255,255,0.60);
-      box-shadow: 0 14px 30px var(--shadow1);
+      width: 86px;
+      height: 86px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0.10));
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: 0 14px 28px rgba(0,0,0,0.14);
       display:flex;
       justify-content:center;
       align-items:center;
@@ -85,10 +111,11 @@
 
     h1{
       font-size: 28px;
-      line-height: 1.1;
+      line-height: 1.05;
       margin: 0;
       font-weight: 800;
-      letter-spacing: -0.4px;
+      letter-spacing: -0.5px;
+      text-shadow: 0 10px 24px rgba(0,0,0,0.18);
     }
 
     .subtitle{
@@ -96,21 +123,23 @@
       font-size: 16px;
       color: var(--inkSoft);
       font-weight: 600;
+      position: relative;
+      z-index: 1;
     }
 
-    .selectWrap{ margin: 0 0 14px; }
+    .selectWrap{ margin: 0 0 14px; position: relative; z-index: 1; }
 
     select{
       width: 100%;
       padding: 13px 14px;
       border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.65);
-      background: rgba(255,255,255,0.42);
-      color: var(--ink);
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,0.14);
+      color: #ffffff;
       font-size: 16px;
-      font-weight: 600;
+      font-weight: 700;
       outline: none;
-      box-shadow: 0 10px 18px rgba(21,56,120,0.12);
+      box-shadow: 0 10px 18px rgba(0,0,0,0.12);
       appearance: none;
       -webkit-appearance: none;
       cursor: pointer;
@@ -124,7 +153,7 @@
       top: 50%;
       transform: translateY(-50%);
       pointer-events: none;
-      color: rgba(11,42,89,0.55);
+      color: rgba(255,255,255,0.72);
       font-size: 16px;
     }
 
@@ -132,44 +161,50 @@
       width: 100%;
       padding: 14px 14px;
       border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.65);
-      background: var(--btn);
-      color: var(--ink);
+      border: 1px solid var(--stroke);
+      background: var(--tile);
+      color: #ffffff;
       font-size: 16px;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
+
       display:flex;
       align-items:center;
       gap: 10px;
-      justify-content:center;
-      box-shadow: 0 12px 20px rgba(21,56,120,0.14);
+      justify-content:flex-start;
+
+      box-shadow: 0 12px 20px rgba(0,0,0,0.14);
       transition: transform 0.12s ease, background 0.12s ease;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
+      position: relative;
+      z-index: 1;
     }
-    .btn:hover{ background: var(--btnHover); }
+
+    .btn:hover{ background: var(--tileHover); }
     .btn:active{ transform: translateY(1px) scale(0.995); }
 
     .btnPrimary{
-      background: linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0.35));
+      background: rgba(255,255,255,0.18);
     }
 
     .btnIcon{
-      width: 24px;
-      height: 24px;
+      width: 26px;
+      height: 26px;
       display:inline-flex;
       align-items:center;
       justify-content:center;
       border-radius: 999px;
-      background: rgba(43,108,255,0.14);
-      border: 1px solid rgba(43,108,255,0.18);
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.20);
       flex: 0 0 auto;
+      margin-left: 2px;
     }
 
     .ico{
       width: 16px;
       height: 16px;
-      stroke: var(--primary2);
+      stroke: rgba(255,255,255,0.94);
       stroke-width: 2.2;
       fill: none;
       stroke-linecap: round;
@@ -180,9 +215,11 @@
       margin-top: 16px;
       padding: 16px;
       border-radius: 16px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.48), rgba(255,255,255,0.30));
-      border: 1px solid rgba(255,255,255,0.60);
-      box-shadow: 0 14px 24px rgba(21,56,120,0.12);
+      background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.08));
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 14px 24px rgba(0,0,0,0.12);
+      position: relative;
+      z-index: 1;
     }
 
     .shareTitle{
@@ -190,7 +227,7 @@
       align-items:center;
       justify-content:center;
       gap: 10px;
-      font-weight: 800;
+      font-weight: 900;
       font-size: 16px;
       margin: 0 0 6px;
       letter-spacing: -0.2px;
@@ -206,8 +243,10 @@
     .footer{
       margin-top: 14px;
       font-size: 12px;
-      color: rgba(11,42,89,0.55);
-      font-weight: 600;
+      color: rgba(255,255,255,0.70);
+      font-weight: 700;
+      position: relative;
+      z-index: 1;
     }
 
     .toast{
@@ -215,16 +254,16 @@
       left: 50%;
       bottom: 18px;
       transform: translateX(-50%);
-      background: rgba(11, 42, 89, 0.90);
+      background: rgba(11, 42, 89, 0.92);
       color: white;
       padding: 10px 12px;
       border-radius: 999px;
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 800;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.18s ease, transform 0.18s ease;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.20);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.22);
     }
     .toast.show{
       opacity: 1;
@@ -234,6 +273,7 @@
     @media (max-width: 380px){
       .panel{ padding: 22px 16px 16px; }
       h1{ font-size: 26px; }
+      .btn{ justify-content: flex-start; }
     }
   </style>
 </head>
@@ -243,28 +283,31 @@
     <div class="panel">
       <div class="brand">
         <div class="logoBadge" aria-label="Ballot Buddy logo">
-          <!-- Friendly "ballot box" SVG (clean, blue, no red) -->
+          <!-- Friendly "ballot box" SVG (warm blue, no red) -->
           <svg width="58" height="58" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
             <defs>
               <linearGradient id="g1" x1="32" y1="2" x2="32" y2="62">
-                <stop stop-color="#2B6CFF"/>
-                <stop offset="1" stop-color="#1F54D8"/>
+                <stop stop-color="#CFE8FF"/>
+                <stop offset="1" stop-color="#9FD2FF"/>
               </linearGradient>
               <linearGradient id="g2" x1="32" y1="10" x2="32" y2="58">
-                <stop stop-color="white" stop-opacity="0.95"/>
-                <stop offset="1" stop-color="white" stop-opacity="0.75"/>
+                <stop stop-color="white" stop-opacity="0.98"/>
+                <stop offset="1" stop-color="white" stop-opacity="0.78"/>
               </linearGradient>
             </defs>
 
+            <!-- ballot -->
             <path d="M24 10c0-2.2 1.8-4 4-4h12c2.2 0 4 1.8 4 4v6H24v-6Z" fill="url(#g2)" stroke="url(#g1)" stroke-width="2" />
-            <path d="M29 12l3 3 7-7" stroke="#2B6CFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M29 12l3 3 7-7" stroke="#1F54D8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
 
+            <!-- box -->
             <path d="M14 22c0-3.3 2.7-6 6-6h24c3.3 0 6 2.7 6 6v26c0 5.5-4.5 10-10 10H24c-5.5 0-10-4.5-10-10V22Z" fill="url(#g2)" stroke="url(#g1)" stroke-width="2"/>
-            <path d="M24 28h16" stroke="#2B6CFF" stroke-opacity="0.35" stroke-width="3" stroke-linecap="round"/>
+            <path d="M24 28h16" stroke="#CFE8FF" stroke-opacity="0.55" stroke-width="3" stroke-linecap="round"/>
 
-            <circle cx="26" cy="38" r="2" fill="#0B2A59" fill-opacity="0.75"/>
-            <circle cx="38" cy="38" r="2" fill="#0B2A59" fill-opacity="0.75"/>
-            <path d="M28 44c2 2 6 2 8 0" stroke="#0B2A59" stroke-opacity="0.65" stroke-width="3" stroke-linecap="round"/>
+            <!-- face -->
+            <circle cx="26" cy="38" r="2" fill="#0B2A59" fill-opacity="0.70"/>
+            <circle cx="38" cy="38" r="2" fill="#0B2A59" fill-opacity="0.70"/>
+            <path d="M28 44c2 2 6 2 8 0" stroke="#0B2A59" stroke-opacity="0.62" stroke-width="3" stroke-linecap="round"/>
           </svg>
         </div>
 
@@ -332,7 +375,6 @@
 
       <button class="btn btnPrimary" id="btn-registration" type="button">
         <span class="btnIcon" aria-hidden="true">
-          <!-- Check icon -->
           <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M20 6L9 17l-5-5"></path>
           </svg>
@@ -342,7 +384,6 @@
 
       <button class="btn" id="btn-deadlines" type="button">
         <span class="btnIcon" aria-hidden="true">
-          <!-- Calendar icon -->
           <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M8 3v3M16 3v3"></path>
             <path d="M4 7h16"></path>
@@ -355,7 +396,6 @@
 
       <button class="btn" id="btn-absentee" type="button">
         <span class="btnIcon" aria-hidden="true">
-          <!-- Envelope icon -->
           <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M4 7h16v10H4z"></path>
             <path d="M4 7l8 6 8-6"></path>
@@ -366,7 +406,6 @@
 
       <div class="shareCard">
         <div class="shareTitle">
-          <!-- Users icon -->
           <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px;">
             <path d="M16 11a3 3 0 1 0-3-3 3 3 0 0 0 3 3z"></path>
             <path d="M6.5 11a2.5 2.5 0 1 0-2.5-2.5A2.5 2.5 0 0 0 6.5 11z"></path>
@@ -376,9 +415,8 @@
           Help a Friend Vote
         </div>
         <p class="shareHint">Share this with a friend, make a difference.</p>
-        <button class="btn" id="btn-share" type="button">
+        <button class="btn" id="btn-share" type="button" style="justify-content:center;">
           <span class="btnIcon" aria-hidden="true">
-            <!-- Share icon -->
             <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 5v10"></path>
               <path d="M8 8l4-4 4 4"></path>
@@ -416,7 +454,6 @@
     });
 
     function stateSlug(name) {
-      // vote.org uses lowercase with hyphens (example: "District of Columbia" -> "district-of-columbia")
       return name
         .trim()
         .toLowerCase()
@@ -431,29 +468,19 @@
     function openRegistrationCheck() {
       const state = stateSelect.value;
       if (!state) return open(URL_CHECK_FALLBACK);
-
-      // State tools page includes "Check Your Registration" for that state
-      // Example format: https://www.vote.org/alabama/
-      const slug = stateSlug(state);
-      open(`https://www.vote.org/${slug}/`);
+      open(`https://www.vote.org/${stateSlug(state)}/`);
     }
 
     function openDeadlines() {
       const state = stateSelect.value;
       if (!state) return open(URL_DEADLINES_FALLBACK);
-
-      // State page includes dates, deadlines, rules, and links
-      const slug = stateSlug(state);
-      open(`https://www.vote.org/${slug}/`);
+      open(`https://www.vote.org/${stateSlug(state)}/`);
     }
 
     function openAbsentee() {
       const state = stateSelect.value;
       if (!state) return open(URL_ABSENTEE_FALLBACK);
-
-      // Example format: https://www.vote.org/absentee-ballot/alabama/
-      const slug = stateSlug(state);
-      open(`https://www.vote.org/absentee-ballot/${slug}/`);
+      open(`https://www.vote.org/absentee-ballot/${stateSlug(state)}/`);
     }
 
     function shareLink() {
@@ -462,11 +489,7 @@
       const message = `I just used ${APP_NAME}${state} to make sure I'm ready to vote. Super quick. ${pageUrl}`;
 
       if (navigator.share) {
-        navigator.share({
-          title: APP_NAME,
-          text: message,
-          url: pageUrl
-        }).catch(() => {});
+        navigator.share({ title: APP_NAME, text: message, url: pageUrl }).catch(() => {});
       } else {
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(message).then(() => {
