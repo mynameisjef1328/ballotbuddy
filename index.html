@@ -8,6 +8,7 @@
 
   <style>
     :root{
+      /* Ballot Buddy inverted (panel stays “screen blue”) */
       --ink: #ffffff;
       --inkSoft: rgba(255,255,255,0.84);
 
@@ -22,7 +23,14 @@
       --shadow2: rgba(0, 0, 0, 0.18);
 
       --radius: 20px;
+
+      /* spacing */
       --gap: 12px;
+
+      /* modal */
+      --overlay: rgba(5, 18, 45, 0.55);
+      --modalBg: rgba(255,255,255,0.14);
+      --modalStroke: rgba(255,255,255,0.22);
     }
 
     *{ box-sizing: border-box; }
@@ -31,6 +39,7 @@
       margin: 0;
       min-height: 100vh;
 
+      /* nicer iPhone safe-area padding */
       padding:
         calc(22px + env(safe-area-inset-top))
         calc(22px + env(safe-area-inset-right))
@@ -44,6 +53,7 @@
       font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color: var(--ink);
 
+      /* Blue “app backdrop” */
       background:
         radial-gradient(900px 520px at 50% -10%, rgba(183, 215, 255, 0.95) 0%, rgba(183, 215, 255, 0) 62%),
         radial-gradient(820px 520px at 15% 95%, rgba(26, 96, 224, 0.35) 0%, rgba(26, 96, 224, 0) 58%),
@@ -75,6 +85,7 @@
       overflow: hidden;
     }
 
+    /* subtle glow like the mock */
     .panel:before{
       content:"";
       position:absolute;
@@ -125,6 +136,7 @@
       z-index: 1;
     }
 
+    /* stack adds spacing between dropdown, buttons, and share card */
     .stack{
       display: flex;
       flex-direction: column;
@@ -134,16 +146,6 @@
     }
 
     .selectWrap{ position: relative; }
-    .selectChevron:after{
-      content: "▾";
-      position:absolute;
-      right: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      pointer-events: none;
-      color: rgba(255,255,255,0.72);
-      font-size: 16px;
-    }
 
     select{
       width: 100%;
@@ -161,16 +163,15 @@
       cursor: pointer;
     }
 
-    /* gentle nudge if they tap without selecting a state */
-    .selectWrap.pulse select{
-      border-color: rgba(255,255,255,0.55);
-      box-shadow: 0 0 0 5px rgba(255,255,255,0.10), 0 12px 22px rgba(0,0,0,0.18);
-      animation: pulseGlow 0.55s ease;
-    }
-    @keyframes pulseGlow{
-      0%{ transform: translateY(0); }
-      35%{ transform: translateY(-1px); }
-      100%{ transform: translateY(0); }
+    .selectChevron:after{
+      content: "▾";
+      position:absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: rgba(255,255,255,0.72);
+      font-size: 16px;
     }
 
     .btn{
@@ -245,11 +246,34 @@
     }
 
     .shareHint{
-      margin: 0 0 12px;
+      margin: 0 0 10px;
       font-size: 13px;
       color: var(--inkSoft);
       font-weight: 600;
     }
+
+    .trustRow{
+      margin-top: 10px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .trustLink{
+      appearance: none;
+      border: none;
+      background: transparent;
+      color: rgba(255,255,255,0.85);
+      font-weight: 800;
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      padding: 6px 8px;
+      border-radius: 10px;
+      transition: background 0.12s ease;
+    }
+    .trustLink:hover{ background: rgba(255,255,255,0.10); }
+    .trustLink:active{ background: rgba(255,255,255,0.14); }
 
     .footer{
       margin-top: 14px;
@@ -281,6 +305,100 @@
       opacity: 1;
       transform: translateX(-50%) translateY(-2px);
     }
+
+    /* Modal */
+    .modalOverlay{
+      position: fixed;
+      inset: 0;
+      background: var(--overlay);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding:
+        calc(18px + env(safe-area-inset-top))
+        calc(18px + env(safe-area-inset-right))
+        calc(18px + env(safe-area-inset-bottom))
+        calc(18px + env(safe-area-inset-left));
+      z-index: 9998;
+    }
+    .modalOverlay.show{ display: flex; }
+
+    .modal{
+      width: 100%;
+      max-width: 420px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(48, 132, 255, 0.35), rgba(26, 96, 224, 0.35));
+      border: 1px solid var(--modalStroke);
+      box-shadow: 0 18px 46px rgba(0,0,0,0.30);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 16px 16px 14px;
+      color: #fff;
+    }
+
+    .modalHeader{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .modalTitle{
+      font-weight: 900;
+      font-size: 16px;
+      letter-spacing: -0.2px;
+      margin: 0;
+    }
+
+    .modalClose{
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.20);
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      font-size: 18px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: background 0.12s ease, transform 0.12s ease;
+    }
+    .modalClose:hover{ background: rgba(255,255,255,0.18); }
+    .modalClose:active{ transform: translateY(1px); }
+
+    .modalBody{
+      font-size: 14px;
+      line-height: 1.45;
+      color: rgba(255,255,255,0.90);
+      font-weight: 650;
+      margin: 0 0 12px;
+    }
+
+    .modalBullets{
+      margin: 0 0 12px;
+      padding-left: 18px;
+      color: rgba(255,255,255,0.88);
+      font-size: 13px;
+      line-height: 1.45;
+      font-weight: 650;
+    }
+
+    .modalActions{
+      display:flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .modalBtn{
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      padding: 10px 12px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .modalBtn:hover{ background: rgba(255,255,255,0.18); }
 
     @media (max-width: 380px){
       .panel{ padding: 22px 16px 16px; }
@@ -325,60 +443,20 @@
       <div class="subtitle">Are you ready to vote?</div>
 
       <div class="stack">
-        <div class="selectWrap selectChevron" id="selectWrap">
+        <div class="selectWrap selectChevron">
           <select id="state-select" aria-label="Select your state">
             <option value="">Select My State</option>
-            <option value="alabama">Alabama</option>
-            <option value="alaska">Alaska</option>
-            <option value="arizona">Arizona</option>
-            <option value="arkansas">Arkansas</option>
-            <option value="california">California</option>
-            <option value="colorado">Colorado</option>
-            <option value="connecticut">Connecticut</option>
-            <option value="delaware">Delaware</option>
-            <option value="district-of-columbia">District of Columbia</option>
-            <option value="florida">Florida</option>
-            <option value="georgia">Georgia</option>
-            <option value="hawaii">Hawaii</option>
-            <option value="idaho">Idaho</option>
-            <option value="illinois">Illinois</option>
-            <option value="indiana">Indiana</option>
-            <option value="iowa">Iowa</option>
-            <option value="kansas">Kansas</option>
-            <option value="kentucky">Kentucky</option>
-            <option value="louisiana">Louisiana</option>
-            <option value="maine">Maine</option>
-            <option value="maryland">Maryland</option>
-            <option value="massachusetts">Massachusetts</option>
-            <option value="michigan">Michigan</option>
-            <option value="minnesota">Minnesota</option>
-            <option value="mississippi">Mississippi</option>
-            <option value="missouri">Missouri</option>
-            <option value="montana">Montana</option>
-            <option value="nebraska">Nebraska</option>
-            <option value="nevada">Nevada</option>
-            <option value="new-hampshire">New Hampshire</option>
-            <option value="new-jersey">New Jersey</option>
-            <option value="new-mexico">New Mexico</option>
-            <option value="new-york">New York</option>
-            <option value="north-carolina">North Carolina</option>
-            <option value="north-dakota">North Dakota</option>
-            <option value="ohio">Ohio</option>
-            <option value="oklahoma">Oklahoma</option>
-            <option value="oregon">Oregon</option>
-            <option value="pennsylvania">Pennsylvania</option>
-            <option value="rhode-island">Rhode Island</option>
-            <option value="south-carolina">South Carolina</option>
-            <option value="south-dakota">South Dakota</option>
-            <option value="tennessee">Tennessee</option>
-            <option value="texas">Texas</option>
-            <option value="utah">Utah</option>
-            <option value="vermont">Vermont</option>
-            <option value="virginia">Virginia</option>
-            <option value="washington">Washington</option>
-            <option value="west-virginia">West Virginia</option>
-            <option value="wisconsin">Wisconsin</option>
-            <option value="wyoming">Wyoming</option>
+            <option>Alabama</option><option>Alaska</option><option>Arizona</option><option>Arkansas</option><option>California</option>
+            <option>Colorado</option><option>Connecticut</option><option>Delaware</option><option>District of Columbia</option><option>Florida</option>
+            <option>Georgia</option><option>Hawaii</option><option>Idaho</option><option>Illinois</option><option>Indiana</option>
+            <option>Iowa</option><option>Kansas</option><option>Kentucky</option><option>Louisiana</option><option>Maine</option>
+            <option>Maryland</option><option>Massachusetts</option><option>Michigan</option><option>Minnesota</option><option>Mississippi</option>
+            <option>Missouri</option><option>Montana</option><option>Nebraska</option><option>Nevada</option><option>New Hampshire</option>
+            <option>New Jersey</option><option>New Mexico</option><option>New York</option><option>North Carolina</option><option>North Dakota</option>
+            <option>Ohio</option><option>Oklahoma</option><option>Oregon</option><option>Pennsylvania</option><option>Rhode Island</option>
+            <option>South Carolina</option><option>South Dakota</option><option>Tennessee</option><option>Texas</option><option>Utah</option>
+            <option>Vermont</option><option>Virginia</option><option>Washington</option><option>West Virginia</option><option>Wisconsin</option>
+            <option>Wyoming</option>
           </select>
         </div>
 
@@ -409,6 +487,28 @@
           Request Absentee Ballot
         </button>
 
+        <!-- NEW: Polling place -->
+        <button class="btn" id="btn-polling" type="button">
+          <span class="btnIcon" aria-hidden="true">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 21s7-4.5 7-11a7 7 0 0 0-14 0c0 6.5 7 11 7 11z"></path>
+              <path d="M12 10.5a2.2 2.2 0 1 0 0-4.4 2.2 2.2 0 0 0 0 4.4z"></path>
+            </svg>
+          </span>
+          Find My Polling Place
+        </button>
+
+        <!-- NEW: Reminders -->
+        <button class="btn" id="btn-reminders" type="button">
+          <span class="btnIcon" aria-hidden="true">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 7h18s-3 0-3-7"></path>
+              <path d="M13.7 21a2 2 0 0 1-3.4 0"></path>
+            </svg>
+          </span>
+          Add Election Reminders
+        </button>
+
         <div class="shareCard">
           <div class="shareTitle">
             <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px;">
@@ -430,6 +530,11 @@
             </span>
             Share Ballot Buddy
           </button>
+
+          <!-- NEW: trust link -->
+          <div class="trustRow">
+            <button class="trustLink" id="btn-trust" type="button">Why trust this?</button>
+          </div>
         </div>
       </div>
 
@@ -439,96 +544,109 @@
 
   <div class="toast" id="toast">Copied. Share it with a friend 💙</div>
 
+  <!-- Trust Modal -->
+  <div class="modalOverlay" id="trustOverlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="trustTitle">
+      <div class="modalHeader">
+        <p class="modalTitle" id="trustTitle">Why trust Ballot Buddy?</p>
+        <button class="modalClose" id="trustClose" type="button" aria-label="Close">×</button>
+      </div>
+      <p class="modalBody">
+        No data collection. No login. Just quick links to official resources.
+      </p>
+      <ul class="modalBullets">
+        <li>We don’t ask for your address, party, or personal info.</li>
+        <li>We don’t store anything about you.</li>
+        <li>You tap a button, we open a trusted destination in a new tab.</li>
+      </ul>
+      <div class="modalActions">
+        <button class="modalBtn" id="trustOk" type="button">Got it</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const APP_NAME = "Ballot Buddy";
 
-    // Set this to your final domain later, otherwise it uses whatever page you're on.
-    const APP_URL = window.location.origin + window.location.pathname;
-
-    // Core links (nonpartisan)
-    const URL_CHECK_REG = "https://www.vote.org/am-i-registered-to-vote/";
+    // Reliable destinations
+    const URL_CHECK = "https://www.vote.org/am-i-registered-to-vote/";
     const URL_DEADLINES = "https://www.vote.org/voter-registration-deadlines/";
     const URL_ABSENTEE_BASE = "https://www.vote.org/absentee-ballot/";
+    const URL_POLLING = "https://www.vote.org/polling-place-locator/";
+    const URL_REMINDERS = "https://www.vote.org/election-reminders/";
 
     const stateSelect = document.getElementById("state-select");
-    const selectWrap = document.getElementById("selectWrap");
 
-    const btnReg = document.getElementById("btn-registration");
-    const btnDeadlines = document.getElementById("btn-deadlines");
-    const btnAbsentee = document.getElementById("btn-absentee");
-    const btnShare = document.getElementById("btn-share");
+    // Buttons
+    document.getElementById("btn-registration").addEventListener("click", () => safeOpen(URL_CHECK));
+    document.getElementById("btn-deadlines").addEventListener("click", () => safeOpen(URL_DEADLINES));
+    document.getElementById("btn-absentee").addEventListener("click", openAbsentee);
+    document.getElementById("btn-polling").addEventListener("click", () => safeOpen(URL_POLLING));
+    document.getElementById("btn-reminders").addEventListener("click", () => safeOpen(URL_REMINDERS));
+    document.getElementById("btn-share").addEventListener("click", shareLink);
 
-    btnReg.addEventListener("click", () => {
-      // registration check works without selecting a state
-      safeNavigate(URL_CHECK_REG);
+    // Trust modal
+    document.getElementById("btn-trust").addEventListener("click", openTrustModal);
+    document.getElementById("trustClose").addEventListener("click", closeTrustModal);
+    document.getElementById("trustOk").addEventListener("click", closeTrustModal);
+
+    // Close modal on overlay click
+    document.getElementById("trustOverlay").addEventListener("click", (e) => {
+      if (e.target.id === "trustOverlay") closeTrustModal();
     });
 
-    btnDeadlines.addEventListener("click", () => {
-      // deadlines page works without selecting a state
-      safeNavigate(URL_DEADLINES);
+    // Close modal on Escape
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeTrustModal();
     });
 
-    btnAbsentee.addEventListener("click", () => {
-      const slug = getStateSlug();
-      if (!slug) return requireState("Select your state to request an absentee ballot.");
-      safeNavigate(URL_ABSENTEE_BASE + slug + "/");
-    });
-
-    btnShare.addEventListener("click", shareLink);
-
+    // Tiny UX nudge
     stateSelect.addEventListener("change", () => {
-      const slug = getStateSlug();
-      if (slug) showToast(`Selected: ${stateSelect.options[stateSelect.selectedIndex].text}`);
+      if (stateSelect.value) showToast(`Selected: ${stateSelect.value}`);
     });
 
-    function getStateSlug() {
-      return (stateSelect.value || "").trim();
+    function stateSlug(name) {
+      return name.trim().toLowerCase().replace(/[.]/g, "").replace(/\s+/g, "-");
     }
 
-    function safeNavigate(url) {
-      // More reliable on iOS/PWA than popups, but still opens quickly.
-      try {
-        window.location.href = url;
-      } catch (e) {
-        window.open(url, "_blank", "noopener,noreferrer");
-      }
+    function safeOpen(url) {
+      window.open(url, "_blank", "noopener,noreferrer");
     }
 
-    function requireState(msg) {
-      pulseSelect();
-      showToast(msg);
+    function openAbsentee() {
+      // If state is selected, go state-specific, else fall back to generic absentee page
+      const state = stateSelect.value;
+      if (!state) return safeOpen(URL_ABSENTEE_BASE);
+      safeOpen(URL_ABSENTEE_BASE + stateSlug(state) + "/");
     }
 
-    function pulseSelect() {
-      selectWrap.classList.remove("pulse");
-      void selectWrap.offsetWidth;
-      selectWrap.classList.add("pulse");
-      setTimeout(() => selectWrap.classList.remove("pulse"), 650);
-    }
+    function shareLink() {
+      const pageUrl = window.location.href;
+      const state = stateSelect.value ? ` (${stateSelect.value})` : "";
 
-    async function shareLink() {
-      const slug = getStateSlug();
-      const stateName = slug ? ` (${stateSelect.options[stateSelect.selectedIndex].text})` : "";
-      const message = `I just used ${APP_NAME}${stateName} to get ready to vote. Super quick: ${APP_URL}`;
+      const variants = [
+        `Quick voting prep tool: ${APP_NAME}${state}. Check registration, deadlines, polling place, and reminders in under a minute. ${pageUrl}`,
+        `${APP_NAME}${state} makes voting prep fast. Worth bookmarking. ${pageUrl}`,
+        `If you moved recently, double-check your voting info here: ${APP_NAME}${state}. ${pageUrl}`,
+        `Don’t guess on deadlines, ${APP_NAME}${state} has the quick links. ${pageUrl}`,
+        `Find your polling place and key deadlines fast with ${APP_NAME}${state}. ${pageUrl}`
+      ];
+
+      const message = variants[Math.floor(Math.random() * variants.length)];
 
       if (navigator.share) {
-        try {
-          await navigator.share({ title: APP_NAME, text: message, url: APP_URL });
-          return;
-        } catch (e) {
-          // user canceled or share failed, fall through to copy
+        navigator.share({ title: APP_NAME, text: message, url: pageUrl }).catch(() => {});
+      } else {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(message).then(() => {
+            showToast("Copied. Share it with a friend 💙");
+          }).catch(() => {
+            prompt("Copy this message:", message);
+          });
+        } else {
+          prompt("Copy this message:", message);
         }
       }
-
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        try {
-          await navigator.clipboard.writeText(message);
-          showToast("Copied. Share it with a friend 💙");
-          return;
-        } catch (e) {}
-      }
-
-      prompt("Copy this message:", message);
     }
 
     function showToast(text) {
@@ -536,7 +654,19 @@
       toast.textContent = text;
       toast.classList.add("show");
       clearTimeout(window.__toastTimer);
-      window.__toastTimer = setTimeout(() => toast.classList.remove("show"), 1600);
+      window.__toastTimer = setTimeout(() => toast.classList.remove("show"), 1400);
+    }
+
+    function openTrustModal() {
+      const overlay = document.getElementById("trustOverlay");
+      overlay.classList.add("show");
+      overlay.setAttribute("aria-hidden", "false");
+    }
+
+    function closeTrustModal() {
+      const overlay = document.getElementById("trustOverlay");
+      overlay.classList.remove("show");
+      overlay.setAttribute("aria-hidden", "true");
     }
   </script>
 </body>
