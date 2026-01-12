@@ -75,7 +75,7 @@
       border-radius: var(--radius);
       padding: 26px 20px 18px;
 
-      /* FIX: layer the glow into the panel background so it fades continuously (no hard seam) */
+      /* layer the glow into the panel background so it fades continuously (no hard seam) */
       background:
         radial-gradient(720px 260px at 50% -40px, rgba(255,255,255,0.26) 0%, rgba(255,255,255,0) 72%),
         radial-gradient(900px 360px at 50% 125%, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0) 62%),
@@ -94,6 +94,8 @@
       position: relative;
       overflow: hidden;
     }
+
+    .hidden{ display:none; }
 
     .brand{
       display:flex;
@@ -210,6 +212,10 @@
 
     .btnPrimary{
       background: rgba(255,255,255,0.18);
+    }
+
+    .btnCenter{
+      justify-content:center;
     }
 
     .btnIcon{
@@ -330,6 +336,66 @@
       transform: translateX(-50%) translateY(-2px);
     }
 
+    /* Intro (landing page) specifics */
+    .introTitle{
+      margin-top: 6px;
+      font-size: 30px;
+      font-weight: 900;
+      letter-spacing: -0.6px;
+    }
+
+    .introLead{
+      margin: 10px 0 14px;
+      font-size: 16px;
+      color: var(--inkSoft);
+      font-weight: 700;
+    }
+
+    .introBullets{
+      display: grid;
+      gap: 12px;
+      margin: 0 0 14px;
+      text-align: left;
+    }
+
+    .introBullet{
+      display:flex;
+      gap: 12px;
+      align-items:flex-start;
+      padding: 14px 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 12px 20px rgba(0,0,0,0.12);
+    }
+
+    .introBulletIcon{
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.20);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex: 0 0 auto;
+      margin-top: 1px;
+    }
+
+    .introBulletText{
+      font-size: 14px;
+      line-height: 1.25;
+      font-weight: 800;
+      color: rgba(255,255,255,0.96);
+    }
+
+    .introFine{
+      margin-top: 12px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.70);
+      font-weight: 800;
+    }
+
     /* Modal */
     .modalOverlay{
       position: fixed;
@@ -427,12 +493,64 @@
     @media (max-width: 380px){
       .panel{ padding: 22px 16px 16px; }
       h1{ font-size: 26px; }
+      .introTitle{ font-size: 28px; }
     }
   </style>
 </head>
 
 <body>
-  <div class="wrap">
+
+  <!-- INTRO / LANDING PAGE -->
+  <div class="wrap" id="introScreen">
+    <div class="panel">
+      <div class="brand">
+        <div class="logoBadge" aria-label="Ballot Buddy logo">
+          <img class="appLogo" src="./assets/ballot-buddy-icon.png" alt="Ballot Buddy logo">
+        </div>
+        <div class="introTitle">Ballot Buddy</div>
+      </div>
+
+      <div class="introLead">Your fastest path to voting info.</div>
+
+      <div class="introBullets" aria-label="Why Ballot Buddy helps">
+        <div class="introBullet">
+          <div class="introBulletIcon" aria-hidden="true">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg>
+          </div>
+          <div class="introBulletText">One tap to the right place for your state.</div>
+        </div>
+
+        <div class="introBullet">
+          <div class="introBulletIcon" aria-hidden="true">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 3v3M16 3v3"></path><path d="M4 7h16"></path>
+              <path d="M6 5h12a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"></path>
+            </svg>
+          </div>
+          <div class="introBulletText">Registration, deadlines, absentee, polling place, all fast.</div>
+        </div>
+
+        <div class="introBullet">
+          <div class="introBulletIcon" aria-hidden="true">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7 11V8a5 5 0 0 1 10 0v3"></path>
+              <path d="M6 11h12v10H6z"></path>
+            </svg>
+          </div>
+          <div class="introBulletText">No accounts, no tracking, no personal data stored.</div>
+        </div>
+      </div>
+
+      <button class="btn btnPrimary btnCenter" id="btn-intro-next" type="button" aria-label="Next">
+        Next
+      </button>
+
+      <div class="introFine">Voting resources via Vote.org</div>
+    </div>
+  </div>
+
+  <!-- MAIN SCREEN (your existing UI) -->
+  <div class="wrap hidden" id="mainScreen">
     <div class="panel">
       <div class="brand">
         <div class="logoBadge" aria-label="Ballot Buddy logo">
@@ -664,7 +782,36 @@
       overlay.setAttribute("aria-hidden", "true");
     }
 
+    function showMainScreen() {
+      const intro = byId("introScreen");
+      const main = byId("mainScreen");
+      if (intro) intro.classList.add("hidden");
+      if (main) main.classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
     window.addEventListener("DOMContentLoaded", () => {
+      // Intro logic (show once)
+      const seen = localStorage.getItem("bb_seen_intro") === "1";
+      const btnNext = byId("btn-intro-next");
+
+      if (seen) {
+        showMainScreen();
+      } else {
+        // Ensure intro visible, main hidden
+        const intro = byId("introScreen");
+        const main = byId("mainScreen");
+        if (intro) intro.classList.remove("hidden");
+        if (main) main.classList.add("hidden");
+      }
+
+      if (btnNext) {
+        btnNext.addEventListener("click", () => {
+          localStorage.setItem("bb_seen_intro", "1");
+          showMainScreen();
+        });
+      }
+
       const stateSelect = byId("state-select");
 
       // Button wiring
