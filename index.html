@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Ballot Buddy</title>
 
-  <!-- App / tab icons -->
-<link rel="icon" href="/ballotbuddy/assets/ballot-buddy-icon.png">
-<link rel="apple-touch-icon" href="/ballotbuddy/assets/ballot-buddy-icon.png">
+  <!-- App / tab icons (use relative paths for GitHub Pages reliability) -->
+  <link rel="icon" href="./assets/ballot-buddy-icon.png">
+  <link rel="apple-touch-icon" href="./assets/ballot-buddy-icon.png">
 
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap">
 
@@ -74,7 +74,13 @@
     .panel{
       border-radius: var(--radius);
       padding: 26px 20px 18px;
-      background: linear-gradient(180deg, var(--cardTop) 0%, var(--cardBot) 100%);
+
+      /* FIX: layer the glow into the panel background so it fades continuously (no hard seam) */
+      background:
+        radial-gradient(720px 260px at 50% -40px, rgba(255,255,255,0.26) 0%, rgba(255,255,255,0) 72%),
+        radial-gradient(900px 360px at 50% 125%, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0) 62%),
+        linear-gradient(180deg, var(--cardTop) 0%, var(--cardBot) 100%);
+
       border: 1px solid rgba(255,255,255,0.18);
 
       box-shadow:
@@ -87,16 +93,6 @@
       text-align: center;
       position: relative;
       overflow: hidden;
-    }
-
-    /* subtle glow like the mock */
-    .panel:before{
-      content:"";
-      position:absolute;
-      inset:-60px -60px auto -60px;
-      height: 220px;
-      background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.28), rgba(255,255,255,0));
-      pointer-events:none;
     }
 
     .brand{
@@ -540,25 +536,25 @@
         </div>
       </div>
 
-    <div class="footer">
-  <span>Powered by builtbyeljefe</span>
-  <span class="dot">·</span>
+      <div class="footer">
+        <span>Powered by builtbyeljefe</span>
+        <span class="dot">·</span>
 
-  <a class="footerLink"
-     id="link-privacy"
-     href="https://mynameisjef1328.github.io/ballotbuddy-support/privacy.html">
-     Privacy
-  </a>
+        <a class="footerLink"
+           id="link-privacy"
+           href="https://mynameisjef1328.github.io/ballotbuddy-support/privacy.html">
+           Privacy
+        </a>
 
-  <span class="dot">·</span>
+        <span class="dot">·</span>
 
-  <a class="footerLink"
-     id="link-support"
-     href="https://mynameisjef1328.github.io/ballotbuddy-support/">
-     Support
-  </a>
-</div> 
-      
+        <a class="footerLink"
+           id="link-support"
+           href="https://mynameisjef1328.github.io/ballotbuddy-support/">
+           Support
+        </a>
+      </div>
+
     </div>
   </div>
 
@@ -713,6 +709,6 @@
       }
     });
   </script>
-  
+
 </body>
 </html>
