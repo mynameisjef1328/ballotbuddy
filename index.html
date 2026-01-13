@@ -172,6 +172,7 @@
       appearance: none;
       -webkit-appearance: none;
       cursor: pointer;
+      transition: box-shadow 0.18s ease, border-color 0.18s ease;
     }
 
     .selectChevron:after{
@@ -183,6 +184,17 @@
       pointer-events: none;
       color: rgba(255,255,255,0.72);
       font-size: 16px;
+    }
+
+    /* STATE GLOW (added): soft attention cue when no state selected */
+    @keyframes bbGlowPulse {
+      0%   { box-shadow: 0 10px 18px rgba(0,0,0,0.12), 0 0 0 2px rgba(255,255,255,0.30), 0 0 18px rgba(255,255,255,0.26); }
+      50%  { box-shadow: 0 10px 18px rgba(0,0,0,0.12), 0 0 0 2px rgba(255,255,255,0.42), 0 0 26px rgba(255,255,255,0.34); }
+      100% { box-shadow: 0 10px 18px rgba(0,0,0,0.12), 0 0 0 2px rgba(255,255,255,0.30), 0 0 18px rgba(255,255,255,0.26); }
+    }
+    .selectWrap.glow select{
+      border-color: rgba(255,255,255,0.34);
+      animation: bbGlowPulse 1.8s ease-in-out infinite;
     }
 
     .btn{
@@ -587,7 +599,7 @@
       <div class="subtitle">Are you ready to vote?</div>
 
       <div class="stack">
-        <div class="selectWrap selectChevron">
+        <div class="selectWrap selectChevron" id="state-wrap">
           <select id="state-select" aria-label="Select your state">
             <option value="">Select My State</option>
             <option>Alabama</option><option>Alaska</option><option>Arizona</option><option>Arkansas</option><option>California</option>
@@ -853,6 +865,17 @@
       }
 
       const stateSelect = byId("state-select");
+      const stateWrap = byId("state-wrap");
+
+      // STATE GLOW (added): glow when no state selected
+      function syncStateGlow() {
+        if (!stateSelect || !stateWrap) return;
+        const empty = !stateSelect.value;
+        stateWrap.classList.toggle("glow", empty);
+      }
+
+      // Set initial glow state (in case browser restores form values)
+      syncStateGlow();
 
       // Button wiring
       const btnRegistration = byId("btn-registration");
@@ -891,6 +914,7 @@
 
       if (stateSelect) {
         stateSelect.addEventListener("change", () => {
+          syncStateGlow(); // STATE GLOW (added)
           if (stateSelect.value) showToast(`Selected: ${stateSelect.value}`);
         });
       }
