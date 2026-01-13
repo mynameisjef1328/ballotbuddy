@@ -396,6 +396,26 @@
       font-weight: 800;
     }
 
+    /* INTRO SKIP (added) */
+    .introSkip{
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      border: none;
+      background: rgba(255,255,255,0.10);
+      color: rgba(255,255,255,0.90);
+      font-weight: 900;
+      font-size: 13px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      cursor: pointer;
+      z-index: 2;
+      transition: background 0.12s ease, transform 0.12s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .introSkip:hover{ background: rgba(255,255,255,0.16); }
+    .introSkip:active{ transform: translateY(1px); background: rgba(255,255,255,0.18); }
+
     /* Modal */
     .modalOverlay{
       position: fixed;
@@ -503,6 +523,11 @@
   <!-- INTRO / LANDING PAGE -->
   <div class="wrap" id="introScreen">
     <div class="panel">
+      <!-- INTRO SKIP (added) -->
+      <button class="introSkip" id="btn-intro-skip" type="button" aria-label="Skip intro">
+        Skip
+      </button>
+
       <div class="brand">
         <div class="logoBadge" aria-label="Ballot Buddy logo">
           <img class="appLogo" src="./assets/ballot-buddy-icon.png" alt="Ballot Buddy logo">
@@ -790,24 +815,39 @@
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
+    // INTRO SKIP (added): show intro again if user skipped (does not set seen flag)
+    function showIntroScreen() {
+      const intro = byId("introScreen");
+      const main = byId("mainScreen");
+      if (main) main.classList.add("hidden");
+      if (intro) intro.classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
     window.addEventListener("DOMContentLoaded", () => {
       // Intro logic (show once)
       const seen = localStorage.getItem("bb_seen_intro") === "1";
       const btnNext = byId("btn-intro-next");
+      const btnSkip = byId("btn-intro-skip"); // INTRO SKIP (added)
 
       if (seen) {
         showMainScreen();
       } else {
         // Ensure intro visible, main hidden
-        const intro = byId("introScreen");
-        const main = byId("mainScreen");
-        if (intro) intro.classList.remove("hidden");
-        if (main) main.classList.add("hidden");
+        showIntroScreen();
       }
 
       if (btnNext) {
         btnNext.addEventListener("click", () => {
           localStorage.setItem("bb_seen_intro", "1");
+          showMainScreen();
+        });
+      }
+
+      // INTRO SKIP (added)
+      if (btnSkip) {
+        btnSkip.addEventListener("click", () => {
+          // Do NOT set bb_seen_intro here. This is an escape hatch only.
           showMainScreen();
         });
       }
