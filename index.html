@@ -1,4 +1,4 @@
-Bb CODE:  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -9,7 +9,6 @@ Bb CODE:  <!DOCTYPE html>
 
   <style>
     :root{
-      /* Ballot Buddy inverted (panel stays “screen blue”) */
       --ink: #ffffff;
       --inkSoft: rgba(255,255,255,0.84);
 
@@ -24,11 +23,8 @@ Bb CODE:  <!DOCTYPE html>
       --shadow2: rgba(0, 0, 0, 0.18);
 
       --radius: 20px;
-
-      /* spacing */
       --gap: 12px;
 
-      /* modal */
       --overlay: rgba(5, 18, 45, 0.55);
       --modalStroke: rgba(255,255,255,0.22);
     }
@@ -39,7 +35,6 @@ Bb CODE:  <!DOCTYPE html>
       margin: 0;
       min-height: 100vh;
 
-      /* nicer iPhone safe-area padding */
       padding:
         calc(22px + env(safe-area-inset-top))
         calc(22px + env(safe-area-inset-right))
@@ -53,7 +48,6 @@ Bb CODE:  <!DOCTYPE html>
       font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color: var(--ink);
 
-      /* Blue “app backdrop” */
       background:
         radial-gradient(900px 520px at 50% -10%, rgba(183, 215, 255, 0.95) 0%, rgba(183, 215, 255, 0) 62%),
         radial-gradient(820px 520px at 15% 95%, rgba(26, 96, 224, 0.35) 0%, rgba(26, 96, 224, 0) 58%),
@@ -71,7 +65,6 @@ Bb CODE:  <!DOCTYPE html>
       border-radius: var(--radius);
       padding: 26px 20px 18px;
 
-      /* layer the glow into the panel background so it fades continuously (no hard seam) */
       background:
         radial-gradient(720px 260px at 50% -40px, rgba(255,255,255,0.26) 0%, rgba(255,255,255,0) 72%),
         radial-gradient(900px 360px at 50% 125%, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0) 62%),
@@ -97,33 +90,11 @@ Bb CODE:  <!DOCTYPE html>
       display:flex;
       flex-direction: column;
       align-items:center;
-      gap: 10px;
+      gap: 8px;
       margin-top: 2px;
       margin-bottom: 10px;
       position: relative;
       z-index: 1;
-    }
-
-    .logoBadge{
-      width: 86px;
-      height: 86px;
-      border-radius: 22px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0.10));
-      border: 1px solid rgba(255,255,255,0.22);
-      box-shadow: 0 14px 28px rgba(0,0,0,0.14);
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      overflow: hidden;
-    }
-
-    .appLogo{
-      width: 74px;
-      height: 74px;
-      display: block;
-      border-radius: 18px;
-      object-fit: cover;
-      box-shadow: 0 10px 22px rgba(0,0,0,0.18);
     }
 
     h1{
@@ -182,7 +153,6 @@ Bb CODE:  <!DOCTYPE html>
       font-size: 16px;
     }
 
-    /* STATE GLOW (added): soft attention cue when no state selected */
     @keyframes bbGlowPulse {
       0%   { box-shadow: 0 10px 18px rgba(0,0,0,0.12), 0 0 0 2px rgba(255,255,255,0.30), 0 0 18px rgba(255,255,255,0.26); }
       50%  { box-shadow: 0 10px 18px rgba(0,0,0,0.12), 0 0 0 2px rgba(255,255,255,0.42), 0 0 26px rgba(255,255,255,0.34); }
@@ -344,7 +314,6 @@ Bb CODE:  <!DOCTYPE html>
       transform: translateX(-50%) translateY(-2px);
     }
 
-    /* Intro (landing page) specifics */
     .introTitle{
       margin-top: 6px;
       font-size: 30px;
@@ -404,7 +373,6 @@ Bb CODE:  <!DOCTYPE html>
       font-weight: 800;
     }
 
-    /* INTRO SKIP (added) */
     .introSkip{
       position: absolute;
       top: 12px;
@@ -424,7 +392,43 @@ Bb CODE:  <!DOCTYPE html>
     .introSkip:hover{ background: rgba(255,255,255,0.16); }
     .introSkip:active{ transform: translateY(1px); background: rgba(255,255,255,0.18); }
 
-    /* Modal */
+    /* iOS-style Back button (main -> landing) */
+    .bbBack{
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.95);
+      font-weight: 900;
+      font-size: 14px;
+      cursor: pointer;
+      z-index: 2;
+      box-shadow: 0 12px 22px rgba(0,0,0,0.18);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: transform 0.12s ease, background 0.12s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .bbBack:hover{ background: rgba(255,255,255,0.16); }
+    .bbBack:active{ transform: translateY(1px); background: rgba(255,255,255,0.18); }
+
+    .bbBack svg{
+      width: 16px;
+      height: 16px;
+      stroke: rgba(255,255,255,0.94);
+      stroke-width: 2.4;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex: 0 0 auto;
+    }
+
     .modalOverlay{
       position: fixed;
       inset: 0;
@@ -531,15 +535,11 @@ Bb CODE:  <!DOCTYPE html>
   <!-- INTRO / LANDING PAGE -->
   <div class="wrap" id="introScreen">
     <div class="panel">
-      <!-- INTRO SKIP (added) -->
       <button class="introSkip" id="btn-intro-skip" type="button" aria-label="Skip intro">
         Skip
       </button>
 
       <div class="brand">
-        <div class="logoBadge" aria-label="Ballot Buddy logo">
-          <img class="appLogo" src="./assets/ballot-buddy-icon.png" alt="Ballot Buddy logo">
-        </div>
         <div class="introTitle">Ballot Buddy</div>
       </div>
 
@@ -582,13 +582,19 @@ Bb CODE:  <!DOCTYPE html>
     </div>
   </div>
 
-  <!-- MAIN SCREEN (your existing UI) -->
+  <!-- MAIN SCREEN -->
   <div class="wrap hidden" id="mainScreen">
     <div class="panel">
+
+      <!-- iOS Back button (main -> landing) -->
+      <button class="bbBack" id="btn-back-to-landing" type="button" aria-label="Back to landing">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M15 18l-6-6 6-6"></path>
+        </svg>
+        Back
+      </button>
+
       <div class="brand">
-        <div class="logoBadge" aria-label="Ballot Buddy logo">
-          <img class="appLogo" src="./assets/ballot-buddy-icon.png" alt="Ballot Buddy logo">
-        </div>
         <h1>Ballot Buddy</h1>
       </div>
 
@@ -725,7 +731,7 @@ Bb CODE:  <!DOCTYPE html>
         <li>Ballot Buddy doesn’t ask for or store your address, party, or personal info.</li>
         <li>Some links we open (like Vote.org) may ask for an address to find your polling place.</li>
         <li>We don’t store anything about you.</li>
-        <li>You tap a button, we open a trusted destination in a new tab.</li>
+        <li>You tap a button, we open a trusted destination.</li>
       </ul>
       <div class="modalActions">
         <button class="modalBtn" id="trustOk" type="button">Got it</button>
@@ -738,7 +744,6 @@ Bb CODE:  <!DOCTYPE html>
 
     const APP_NAME = "Ballot Buddy";
 
-    // Official destinations
     const URL_CHECK = "https://www.vote.org/am-i-registered-to-vote/";
     const URL_DEADLINES = "https://www.vote.org/voter-registration-deadlines/";
     const URL_ABSENTEE_BASE = "https://www.vote.org/absentee-ballot/";
@@ -751,8 +756,10 @@ Bb CODE:  <!DOCTYPE html>
       return name.trim().toLowerCase().replace(/[.]/g, "").replace(/\s+/g, "-");
     }
 
+    // In WKWebView, this is the most reliable behavior.
+    // It navigates in the same webview so users can use the native back gesture too.
     function safeOpen(url) {
-      window.open(url, "_blank", "noopener,noreferrer");
+      window.location.href = url;
     }
 
     function openAbsentee(stateSelect) {
@@ -823,7 +830,6 @@ Bb CODE:  <!DOCTYPE html>
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    // INTRO SKIP (added): show intro again if user skipped (does not set seen flag)
     function showIntroScreen() {
       const intro = byId("introScreen");
       const main = byId("mainScreen");
@@ -833,17 +839,14 @@ Bb CODE:  <!DOCTYPE html>
     }
 
     window.addEventListener("DOMContentLoaded", () => {
-      // Intro logic (show once)
       const seen = localStorage.getItem("bb_seen_intro") === "1";
-      const btnNext = byId("btn-intro-next");
-      const btnSkip = byId("btn-intro-skip"); // INTRO SKIP (added)
 
-      if (seen) {
-        showMainScreen();
-      } else {
-        // Ensure intro visible, main hidden
-        showIntroScreen();
-      }
+      const btnNext = byId("btn-intro-next");
+      const btnSkip = byId("btn-intro-skip");
+      const btnBackToLanding = byId("btn-back-to-landing");
+
+      if (seen) showMainScreen();
+      else showIntroScreen();
 
       if (btnNext) {
         btnNext.addEventListener("click", () => {
@@ -852,28 +855,30 @@ Bb CODE:  <!DOCTYPE html>
         });
       }
 
-      // INTRO SKIP (added)
       if (btnSkip) {
         btnSkip.addEventListener("click", () => {
-          // Do NOT set bb_seen_intro here. This is an escape hatch only.
           showMainScreen();
+        });
+      }
+
+      // Back button (main -> landing)
+      if (btnBackToLanding) {
+        btnBackToLanding.addEventListener("click", () => {
+          showIntroScreen();
         });
       }
 
       const stateSelect = byId("state-select");
       const stateWrap = byId("state-wrap");
 
-      // STATE GLOW (added): glow when no state selected
       function syncStateGlow() {
         if (!stateSelect || !stateWrap) return;
         const empty = !stateSelect.value;
         stateWrap.classList.toggle("glow", empty);
       }
 
-      // Set initial glow state (in case browser restores form values)
       syncStateGlow();
 
-      // Button wiring
       const btnRegistration = byId("btn-registration");
       const btnDeadlines = byId("btn-deadlines");
       const btnAbsentee = byId("btn-absentee");
@@ -888,7 +893,6 @@ Bb CODE:  <!DOCTYPE html>
       if (btnReminders) btnReminders.addEventListener("click", () => safeOpen(URL_REMINDERS));
       if (btnShare) btnShare.addEventListener("click", () => shareLink(stateSelect));
 
-      // Trust modal wiring
       const btnTrust = byId("btn-trust");
       const trustClose = byId("trustClose");
       const trustOk = byId("trustOk");
@@ -910,7 +914,7 @@ Bb CODE:  <!DOCTYPE html>
 
       if (stateSelect) {
         stateSelect.addEventListener("change", () => {
-          syncStateGlow(); // STATE GLOW (added)
+          syncStateGlow();
           if (stateSelect.value) showToast(`Selected: ${stateSelect.value}`);
         });
       }
