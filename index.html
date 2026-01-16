@@ -1,14 +1,15 @@
-<!DOCTYPE html>
+Bb CODE:  <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Ballot Buddy</title>
 
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap">
 
   <style>
     :root{
+      /* Ballot Buddy inverted (panel stays “screen blue”) */
       --ink: #ffffff;
       --inkSoft: rgba(255,255,255,0.84);
 
@@ -24,38 +25,41 @@
 
       --radius: 20px;
 
+      /* spacing */
       --gap: 12px;
 
+      /* modal */
       --overlay: rgba(5, 18, 45, 0.55);
       --modalStroke: rgba(255,255,255,0.22);
     }
 
     *{ box-sizing: border-box; }
 
-    html, body{
-      height: 100%;
-      width: 100%;
+    body{
       margin: 0;
-      padding: 0;
+      min-height: 100vh;
+
+      /* nicer iPhone safe-area padding */
+      padding:
+        calc(22px + env(safe-area-inset-top))
+        calc(22px + env(safe-area-inset-right))
+        calc(22px + env(safe-area-inset-bottom))
+        calc(22px + env(safe-area-inset-left));
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
       font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      -webkit-text-size-adjust: 100%;
       color: var(--ink);
+
+      /* Blue “app backdrop” */
       background:
         radial-gradient(900px 520px at 50% -10%, rgba(183, 215, 255, 0.95) 0%, rgba(183, 215, 255, 0) 62%),
         radial-gradient(820px 520px at 15% 95%, rgba(26, 96, 224, 0.35) 0%, rgba(26, 96, 224, 0) 58%),
         linear-gradient(180deg, #cfe3ff 0%, #9fc7ff 46%, #6aa6ff 100%);
-    }
 
-    /* Center the app reliably in WKWebView */
-    body{
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding:
-        calc(14px + env(safe-area-inset-top))
-        calc(14px + env(safe-area-inset-right))
-        calc(14px + env(safe-area-inset-bottom))
-        calc(14px + env(safe-area-inset-left));
+      background-attachment: fixed;
     }
 
     .wrap{
@@ -65,8 +69,9 @@
 
     .panel{
       border-radius: var(--radius);
-      padding: 22px 18px 16px;
+      padding: 26px 20px 18px;
 
+      /* layer the glow into the panel background so it fades continuously (no hard seam) */
       background:
         radial-gradient(720px 260px at 50% -40px, rgba(255,255,255,0.26) 0%, rgba(255,255,255,0) 72%),
         radial-gradient(900px 360px at 50% 125%, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0) 62%),
@@ -86,44 +91,84 @@
       overflow: hidden;
     }
 
+    .hidden{ display:none; }
+
+    .brand{
+      display:flex;
+      flex-direction: column;
+      align-items:center;
+      gap: 10px;
+      margin-top: 2px;
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .logoBadge{
+      width: 86px;
+      height: 86px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0.10));
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: 0 14px 28px rgba(0,0,0,0.14);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      overflow: hidden;
+    }
+
+    .appLogo{
+      width: 74px;
+      height: 74px;
+      display: block;
+      border-radius: 18px;
+      object-fit: cover;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.18);
+    }
+
     h1{
-      font-size: 30px;
+      font-size: 28px;
       line-height: 1.05;
       margin: 0;
-      font-weight: 900;
-      letter-spacing: -0.6px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
       text-shadow: 0 10px 24px rgba(0,0,0,0.18);
     }
 
     .subtitle{
-      margin: 10px 0 16px;
+      margin: 10px 0 18px;
       font-size: 16px;
       color: var(--inkSoft);
-      font-weight: 700;
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
     }
 
     .stack{
       display: flex;
       flex-direction: column;
       gap: var(--gap);
+      position: relative;
+      z-index: 1;
     }
 
     .selectWrap{ position: relative; }
 
     select{
       width: 100%;
-      padding: 13px 44px 13px 14px;
+      padding: 13px 14px;
       border-radius: 14px;
       border: 1px solid var(--stroke);
       background: rgba(255,255,255,0.14);
       color: #ffffff;
       font-size: 16px;
-      font-weight: 800;
+      font-weight: 700;
       outline: none;
+      box-shadow: 0 10px 18px rgba(0,0,0,0.12);
       appearance: none;
       -webkit-appearance: none;
       cursor: pointer;
-      box-shadow: 0 10px 18px rgba(0,0,0,0.12);
+      transition: box-shadow 0.18s ease, border-color 0.18s ease;
     }
 
     .selectChevron:after{
@@ -133,12 +178,11 @@
       top: 50%;
       transform: translateY(-50%);
       pointer-events: none;
-      color: rgba(255,255,255,0.80);
+      color: rgba(255,255,255,0.72);
       font-size: 16px;
-      font-weight: 900;
     }
 
-    /* Soft glow when no state selected */
+    /* STATE GLOW (added): soft attention cue when no state selected */
     @keyframes bbGlowPulse {
       0%   { box-shadow: 0 10px 18px rgba(0,0,0,0.12), 0 0 0 2px rgba(255,255,255,0.30), 0 0 18px rgba(255,255,255,0.26); }
       50%  { box-shadow: 0 10px 18px rgba(0,0,0,0.12), 0 0 0 2px rgba(255,255,255,0.42), 0 0 26px rgba(255,255,255,0.34); }
@@ -157,7 +201,7 @@
       background: var(--tile);
       color: #ffffff;
       font-size: 16px;
-      font-weight: 900;
+      font-weight: 800;
       cursor: pointer;
 
       display:flex;
@@ -169,13 +213,18 @@
       transition: transform 0.12s ease, background 0.12s ease;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
     }
 
     .btn:hover{ background: var(--tileHover); }
     .btn:active{ transform: translateY(1px) scale(0.995); }
 
-    .btnPrimary{ background: rgba(255,255,255,0.18); }
+    .btnPrimary{
+      background: rgba(255,255,255,0.18);
+    }
+
+    .btnCenter{
+      justify-content:center;
+    }
 
     .btnIcon{
       width: 26px;
@@ -187,6 +236,7 @@
       background: rgba(255,255,255,0.16);
       border: 1px solid rgba(255,255,255,0.20);
       flex: 0 0 auto;
+      margin-left: 2px;
     }
 
     .ico{
@@ -200,18 +250,17 @@
     }
 
     .shareCard{
-      margin-top: 4px;
       padding: 16px;
       border-radius: 16px;
       background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.08));
       border: 1px solid rgba(255,255,255,0.18);
       box-shadow: 0 14px 24px rgba(0,0,0,0.12);
-      text-align: left;
     }
 
     .shareTitle{
       display:flex;
       align-items:center;
+      justify-content:center;
       gap: 10px;
       font-weight: 900;
       font-size: 16px;
@@ -223,12 +272,7 @@
       margin: 0 0 10px;
       font-size: 13px;
       color: var(--inkSoft);
-      font-weight: 650;
-    }
-
-    .shareCenterBtn{
-      justify-content:center;
-      margin-top: 8px;
+      font-weight: 600;
     }
 
     .trustRow{
@@ -241,23 +285,26 @@
       appearance: none;
       border: none;
       background: transparent;
-      color: rgba(255,255,255,0.90);
-      font-weight: 900;
+      color: rgba(255,255,255,0.85);
+      font-weight: 800;
       font-size: 13px;
       cursor: pointer;
       text-decoration: underline;
       text-underline-offset: 3px;
       padding: 6px 8px;
       border-radius: 10px;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
+      transition: background 0.12s ease;
     }
+    .trustLink:hover{ background: rgba(255,255,255,0.10); }
+    .trustLink:active{ background: rgba(255,255,255,0.14); }
 
     .footer{
       margin-top: 14px;
       font-size: 12px;
       color: rgba(255,255,255,0.70);
-      font-weight: 800;
+      font-weight: 700;
+      position: relative;
+      z-index: 1;
       display:flex;
       justify-content:center;
       gap: 8px;
@@ -266,36 +313,116 @@
     }
 
     .footerLink{
-      color: rgba(255,255,255,0.88);
+      color: rgba(255,255,255,0.86);
       text-decoration: underline;
       text-underline-offset: 3px;
-      font-weight: 900;
+      font-weight: 800;
     }
+    .footerLink:hover{ color: #ffffff; }
+
     .dot{ opacity: 0.6; }
 
     .toast{
       position: fixed;
       left: 50%;
-      bottom: calc(18px + env(safe-area-inset-bottom));
+      bottom: 18px;
       transform: translateX(-50%);
       background: rgba(11, 42, 89, 0.92);
       color: white;
       padding: 10px 12px;
       border-radius: 999px;
       font-size: 13px;
-      font-weight: 900;
+      font-weight: 800;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.18s ease, transform 0.18s ease;
       box-shadow: 0 10px 20px rgba(0,0,0,0.22);
       z-index: 9999;
-      max-width: calc(100% - 28px);
-      text-align: center;
     }
     .toast.show{
       opacity: 1;
       transform: translateX(-50%) translateY(-2px);
     }
+
+    /* Intro (landing page) specifics */
+    .introTitle{
+      margin-top: 6px;
+      font-size: 30px;
+      font-weight: 900;
+      letter-spacing: -0.6px;
+    }
+
+    .introLead{
+      margin: 10px 0 14px;
+      font-size: 16px;
+      color: var(--inkSoft);
+      font-weight: 700;
+    }
+
+    .introBullets{
+      display: grid;
+      gap: 12px;
+      margin: 0 0 14px;
+      text-align: left;
+    }
+
+    .introBullet{
+      display:flex;
+      gap: 12px;
+      align-items:flex-start;
+      padding: 14px 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 12px 20px rgba(0,0,0,0.12);
+    }
+
+    .introBulletIcon{
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.20);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex: 0 0 auto;
+      margin-top: 1px;
+    }
+
+    .introBulletText{
+      font-size: 14px;
+      line-height: 1.25;
+      font-weight: 800;
+      color: rgba(255,255,255,0.96);
+    }
+
+    .introFine{
+      margin-top: 12px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.70);
+      font-weight: 800;
+    }
+
+    /* INTRO SKIP (added) */
+    .introSkip{
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      border: none;
+      background: rgba(255,255,255,0.10);
+      color: rgba(255,255,255,0.90);
+      font-weight: 900;
+      font-size: 13px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      cursor: pointer;
+      z-index: 2;
+      transition: background 0.12s ease, transform 0.12s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .introSkip:hover{ background: rgba(255,255,255,0.16); }
+    .introSkip:active{ transform: translateY(1px); background: rgba(255,255,255,0.18); }
 
     /* Modal */
     .modalOverlay{
@@ -325,7 +452,6 @@
       -webkit-backdrop-filter: blur(12px);
       padding: 16px 16px 14px;
       color: #fff;
-      text-align: left;
     }
 
     .modalHeader{
@@ -353,14 +479,15 @@
       font-size: 18px;
       font-weight: 900;
       cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
+      transition: background 0.12s ease, transform 0.12s ease;
     }
+    .modalClose:hover{ background: rgba(255,255,255,0.18); }
+    .modalClose:active{ transform: translateY(1px); }
 
     .modalBody{
       font-size: 14px;
       line-height: 1.45;
-      color: rgba(255,255,255,0.92);
+      color: rgba(255,255,255,0.90);
       font-weight: 650;
       margin: 0 0 12px;
     }
@@ -368,7 +495,7 @@
     .modalBullets{
       margin: 0 0 12px;
       padding-left: 18px;
-      color: rgba(255,255,255,0.90);
+      color: rgba(255,255,255,0.88);
       font-size: 13px;
       line-height: 1.45;
       font-weight: 650;
@@ -388,22 +515,83 @@
       padding: 10px 12px;
       font-weight: 900;
       cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
     }
+    .modalBtn:hover{ background: rgba(255,255,255,0.18); }
 
     @media (max-width: 380px){
-      h1{ font-size: 28px; }
-      .panel{ padding: 20px 16px 14px; }
+      .panel{ padding: 22px 16px 16px; }
+      h1{ font-size: 26px; }
+      .introTitle{ font-size: 28px; }
     }
   </style>
 </head>
 
 <body>
-  <div class="wrap" id="mainScreen">
+
+  <!-- INTRO / LANDING PAGE -->
+  <div class="wrap" id="introScreen">
     <div class="panel">
-      <!-- Removed logo entirely (no more question-mark icon) -->
-      <h1>Ballot Buddy</h1>
+      <!-- INTRO SKIP (added) -->
+      <button class="introSkip" id="btn-intro-skip" type="button" aria-label="Skip intro">
+        Skip
+      </button>
+
+      <div class="brand">
+        <div class="logoBadge" aria-label="Ballot Buddy logo">
+          <img class="appLogo" src="./assets/ballot-buddy-icon.png" alt="Ballot Buddy logo">
+        </div>
+        <div class="introTitle">Ballot Buddy</div>
+      </div>
+
+      <div class="introLead">Your fastest path to voting info.</div>
+
+      <div class="introBullets" aria-label="Why Ballot Buddy helps">
+        <div class="introBullet">
+          <div class="introBulletIcon" aria-hidden="true">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg>
+          </div>
+          <div class="introBulletText">One tap to the right place for your state.</div>
+        </div>
+
+        <div class="introBullet">
+          <div class="introBulletIcon" aria-hidden="true">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 3v3M16 3v3"></path><path d="M4 7h16"></path>
+              <path d="M6 5h12a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"></path>
+            </svg>
+          </div>
+          <div class="introBulletText">Registration, deadlines, absentee, polling place, all fast.</div>
+        </div>
+
+        <div class="introBullet">
+          <div class="introBulletIcon" aria-hidden="true">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7 11V8a5 5 0 0 1 10 0v3"></path>
+              <path d="M6 11h12v10H6z"></path>
+            </svg>
+          </div>
+          <div class="introBulletText">No accounts, no tracking, no personal data stored.</div>
+        </div>
+      </div>
+
+      <button class="btn btnPrimary btnCenter" id="btn-intro-next" type="button" aria-label="Next">
+        Next
+      </button>
+
+      <div class="introFine">Voting resources via Vote.org</div>
+    </div>
+  </div>
+
+  <!-- MAIN SCREEN (your existing UI) -->
+  <div class="wrap hidden" id="mainScreen">
+    <div class="panel">
+      <div class="brand">
+        <div class="logoBadge" aria-label="Ballot Buddy logo">
+          <img class="appLogo" src="./assets/ballot-buddy-icon.png" alt="Ballot Buddy logo">
+        </div>
+        <h1>Ballot Buddy</h1>
+      </div>
+
       <div class="subtitle">Are you ready to vote?</div>
 
       <div class="stack">
@@ -426,14 +614,14 @@
 
         <button class="btn btnPrimary" id="btn-registration" type="button">
           <span class="btnIcon" aria-hidden="true">
-            <svg class="ico" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg>
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg>
           </span>
           Check My Registration
         </button>
 
         <button class="btn" id="btn-deadlines" type="button">
           <span class="btnIcon" aria-hidden="true">
-            <svg class="ico" viewBox="0 0 24 24">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M8 3v3M16 3v3"></path><path d="M4 7h16"></path>
               <path d="M6 5h12a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"></path>
               <path d="M8 11h3M13 11h3M8 15h3M13 15h3"></path>
@@ -444,7 +632,7 @@
 
         <button class="btn" id="btn-absentee" type="button">
           <span class="btnIcon" aria-hidden="true">
-            <svg class="ico" viewBox="0 0 24 24">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M4 7h16v10H4z"></path><path d="M4 7l8 6 8-6"></path>
             </svg>
           </span>
@@ -453,7 +641,7 @@
 
         <button class="btn" id="btn-polling" type="button">
           <span class="btnIcon" aria-hidden="true">
-            <svg class="ico" viewBox="0 0 24 24">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 21s7-4.5 7-11a7 7 0 0 0-14 0c0 6.5 7 11 7 11z"></path>
               <path d="M12 10.5a2.2 2.2 0 1 0 0-4.4 2.2 2.2 0 0 0 0 4.4z"></path>
             </svg>
@@ -463,7 +651,7 @@
 
         <button class="btn" id="btn-reminders" type="button">
           <span class="btnIcon" aria-hidden="true">
-            <svg class="ico" viewBox="0 0 24 24">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 7h18s-3 0-3-7"></path>
               <path d="M13.7 21a2 2 0 0 1-3.4 0"></path>
             </svg>
@@ -481,11 +669,11 @@
             </svg>
             Help a Friend Vote
           </div>
-          <p class="shareHint">Share this with see-a-state friendly messaging.</p>
+          <p class="shareHint">Share this with a friend, make a difference.</p>
 
-          <button class="btn shareCenterBtn" id="btn-share" type="button">
+          <button class="btn" id="btn-share" type="button" style="justify-content:center; margin-top: 10px;">
             <span class="btnIcon" aria-hidden="true">
-              <svg class="ico" viewBox="0 0 24 24">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M12 5v10"></path><path d="M8 8l4-4 4 4"></path>
                 <path d="M5 19h14a2 2 0 0 0 2-2v-3"></path><path d="M3 14v3a2 2 0 0 0 2 2"></path>
               </svg>
@@ -503,21 +691,27 @@
         <span>Powered by builtbyeljefe</span>
         <span class="dot">·</span>
 
-        <a class="footerLink" id="link-privacy" href="https://mynameisjef1328.github.io/ballotbuddy-support/privacy.html">
-          Privacy
+        <a class="footerLink"
+           id="link-privacy"
+           href="https://mynameisjef1328.github.io/ballotbuddy-support/privacy.html">
+           Privacy
         </a>
 
         <span class="dot">·</span>
 
-        <a class="footerLink" id="link-support" href="https://mynameisjef1328.github.io/ballotbuddy-support/">
-          Support
+        <a class="footerLink"
+           id="link-support"
+           href="https://mynameisjef1328.github.io/ballotbuddy-support/">
+           Support
         </a>
       </div>
+
     </div>
   </div>
 
-  <div class="toast" id="toast">Copied. Share it with a friend.</div>
+  <div class="toast" id="toast">Copied. Share it with a friend 💙</div>
 
+  <!-- Trust Modal -->
   <div class="modalOverlay" id="trustOverlay" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="trustTitle">
       <div class="modalHeader">
@@ -531,6 +725,7 @@
         <li>Ballot Buddy doesn’t ask for or store your address, party, or personal info.</li>
         <li>Some links we open (like Vote.org) may ask for an address to find your polling place.</li>
         <li>We don’t store anything about you.</li>
+        <li>You tap a button, we open a trusted destination in a new tab.</li>
       </ul>
       <div class="modalActions">
         <button class="modalBtn" id="trustOk" type="button">Got it</button>
@@ -543,6 +738,7 @@
 
     const APP_NAME = "Ballot Buddy";
 
+    // Official destinations
     const URL_CHECK = "https://www.vote.org/am-i-registered-to-vote/";
     const URL_DEADLINES = "https://www.vote.org/voter-registration-deadlines/";
     const URL_ABSENTEE_BASE = "https://www.vote.org/absentee-ballot/";
@@ -555,13 +751,8 @@
       return name.trim().toLowerCase().replace(/[.]/g, "").replace(/\s+/g, "-");
     }
 
-    /*
-      IMPORTANT:
-      WKWebView often ignores window.open(_blank). So we navigate in the SAME view.
-      This makes taps always work in TestFlight and during Apple review.
-    */
     function safeOpen(url) {
-      window.location.href = url;
+      window.open(url, "_blank", "noopener,noreferrer");
     }
 
     function openAbsentee(stateSelect) {
@@ -583,8 +774,15 @@
       const pageUrl = window.location.href;
       const state = stateSelect && stateSelect.value ? ` (${stateSelect.value})` : "";
 
-      const message =
-        `Ballot Buddy${state}: quick links to check registration, deadlines, polling place, and reminders.`;
+      const variants = [
+        `Quick voting prep tool: ${APP_NAME}${state}. Check registration, deadlines, polling place, and reminders in under a minute. ${pageUrl}`,
+        `${APP_NAME}${state} makes voting prep fast. Worth bookmarking. ${pageUrl}`,
+        `If you moved recently, double-check your voting info here: ${APP_NAME}${state}. ${pageUrl}`,
+        `Don’t guess on deadlines, ${APP_NAME}${state} has the quick links. ${pageUrl}`,
+        `Find your polling place and key deadlines fast with ${APP_NAME}${state}. ${pageUrl}`
+      ];
+
+      const message = variants[Math.floor(Math.random() * variants.length)];
 
       if (navigator.share) {
         navigator.share({ title: APP_NAME, text: message, url: pageUrl }).catch(() => {});
@@ -593,7 +791,7 @@
 
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(message).then(() => {
-          showToast("Copied. Share it with a friend.");
+          showToast("Copied. Share it with a friend 💙");
         }).catch(() => {
           prompt("Copy this message:", message);
         });
@@ -617,18 +815,65 @@
       overlay.setAttribute("aria-hidden", "true");
     }
 
+    function showMainScreen() {
+      const intro = byId("introScreen");
+      const main = byId("mainScreen");
+      if (intro) intro.classList.add("hidden");
+      if (main) main.classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    // INTRO SKIP (added): show intro again if user skipped (does not set seen flag)
+    function showIntroScreen() {
+      const intro = byId("introScreen");
+      const main = byId("mainScreen");
+      if (main) main.classList.add("hidden");
+      if (intro) intro.classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
     window.addEventListener("DOMContentLoaded", () => {
+      // Intro logic (show once)
+      const seen = localStorage.getItem("bb_seen_intro") === "1";
+      const btnNext = byId("btn-intro-next");
+      const btnSkip = byId("btn-intro-skip"); // INTRO SKIP (added)
+
+      if (seen) {
+        showMainScreen();
+      } else {
+        // Ensure intro visible, main hidden
+        showIntroScreen();
+      }
+
+      if (btnNext) {
+        btnNext.addEventListener("click", () => {
+          localStorage.setItem("bb_seen_intro", "1");
+          showMainScreen();
+        });
+      }
+
+      // INTRO SKIP (added)
+      if (btnSkip) {
+        btnSkip.addEventListener("click", () => {
+          // Do NOT set bb_seen_intro here. This is an escape hatch only.
+          showMainScreen();
+        });
+      }
+
       const stateSelect = byId("state-select");
       const stateWrap = byId("state-wrap");
 
+      // STATE GLOW (added): glow when no state selected
       function syncStateGlow() {
         if (!stateSelect || !stateWrap) return;
         const empty = !stateSelect.value;
         stateWrap.classList.toggle("glow", empty);
       }
 
+      // Set initial glow state (in case browser restores form values)
       syncStateGlow();
 
+      // Button wiring
       const btnRegistration = byId("btn-registration");
       const btnDeadlines = byId("btn-deadlines");
       const btnAbsentee = byId("btn-absentee");
@@ -643,6 +888,7 @@
       if (btnReminders) btnReminders.addEventListener("click", () => safeOpen(URL_REMINDERS));
       if (btnShare) btnShare.addEventListener("click", () => shareLink(stateSelect));
 
+      // Trust modal wiring
       const btnTrust = byId("btn-trust");
       const trustClose = byId("trustClose");
       const trustOk = byId("trustOk");
@@ -664,11 +910,12 @@
 
       if (stateSelect) {
         stateSelect.addEventListener("change", () => {
-          syncStateGlow();
+          syncStateGlow(); // STATE GLOW (added)
           if (stateSelect.value) showToast(`Selected: ${stateSelect.value}`);
         });
       }
     });
   </script>
+
 </body>
 </html>
