@@ -750,6 +750,81 @@
     const URL_POLLING = "https://www.vote.org/polling-place-locator/";
     const URL_REMINDERS = "https://www.vote.org/election-reminders/";
 
+    // ========== NATIVE BRIDGE ==========
+    // Communication layer between JavaScript and native iOS code
+    window.NativeBridge = (function() {
+      const callbacks = {};
+      let callbackId = 0;
+
+      function generateCallbackId() {
+        return `cb_${++callbackId}_${Date.now()}`;
+      }
+
+      function sendMessage(action, data, callback) {
+        const id = generateCallbackId();
+        if (callback) callbacks[id] = callback;
+
+        const message = { action, ...data, callbackId: id };
+
+        if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.nativeApp) {
+          window.webkit.messageHandlers.nativeApp.postMessage(message);
+        } else {
+          console.log("Native bridge not available, running in browser");
+          if (callback) callback({ success: false, error: "Native bridge not available" });
+        }
+      }
+
+      return {
+        handleCallback(id, response) {
+          if (callbacks[id]) {
+            callbacks[id](response);
+            delete callbacks[id];
+          }
+        },
+
+        // Haptic feedback
+        haptic(type) {
+          sendMessage("haptic", { type });
+        },
+
+        // Notification permissions and scheduling
+        requestNotificationPermission(callback) {
+          sendMessage("requestNotificationPermission", {}, callback);
+        },
+
+        scheduleElectionReminder(electionName, electionDate, reminderType, callback) {
+          sendMessage("scheduleElectionReminder", {
+            electionName,
+            electionDate: new Date(electionDate).toISOString(),
+            reminderType
+          }, callback);
+        },
+
+        getNotificationStatus(callback) {
+          sendMessage("getNotificationStatus", {}, callback);
+        },
+
+        // Calendar integration
+        requestCalendarPermission(callback) {
+          sendMessage("requestCalendarPermission", {}, callback);
+        },
+
+        addToCalendar(electionName, electionDate, pollingLocation, notes, callback) {
+          sendMessage("addToCalendar", {
+            electionName,
+            electionDate: new Date(electionDate).toISOString(),
+            pollingLocation,
+            notes
+          }, callback);
+        },
+
+        getCalendarStatus(callback) {
+          sendMessage("getCalendarStatus", {}, callback);
+        }
+      };
+    })();
+
+    // ========== APP FUNCTIONS ==========
     function byId(id){ return document.getElementById(id); }
 
     function stateSlug(name) {
@@ -759,6 +834,7 @@
     // In WKWebView, this is the most reliable behavior.
     // It navigates in the same webview so users can use the native back gesture too.
     function safeOpen(url) {
+      window.NativeBridge.haptic("navigate");
       window.location.href = url;
     }
 
@@ -778,6 +854,8 @@
     }
 
     function shareLink(stateSelect) {
+      window.NativeBridge.haptic("share");
+
       const pageUrl = window.location.href;
       const state = stateSelect && stateSelect.value ? ` (${stateSelect.value})` : "";
 
@@ -785,7 +863,7 @@
         `Quick voting prep tool: ${APP_NAME}${state}. Check registration, deadlines, polling place, and reminders in under a minute. ${pageUrl}`,
         `${APP_NAME}${state} makes voting prep fast. Worth bookmarking. ${pageUrl}`,
         `If you moved recently, double-check your voting info here: ${APP_NAME}${state}. ${pageUrl}`,
-        `Don’t guess on deadlines, ${APP_NAME}${state} has the quick links. ${pageUrl}`,
+        `Don't guess on deadlines, ${APP_NAME}${state} has the quick links. ${pageUrl}`,
         `Find your polling place and key deadlines fast with ${APP_NAME}${state}. ${pageUrl}`
       ];
 
@@ -808,7 +886,96 @@
       prompt("Copy this message:", message);
     }
 
+    // ========== NATIVE ELECTION REMINDERS ==========
+    function showReminderModal() {
+      window.NativeBridge.haptic("importantAction");
+
+      // Request notification permission first
+      window.NativeBridge.requestNotificationPermission((response) => {
+        if (!response.authorized) {
+          alert("To set election reminders, please enable notifications in your device Settings.\n\nNever miss an election - we'll remind you when it's time to vote!");
+          return;
+        }
+
+        // Show reminder setup UI
+        const electionName = prompt("Election Name (e.g., '2026 General Election'):", "2026 General Election");
+        if (!electionName) return;
+
+        const dateStr = prompt("Election Date (YYYY-MM-DD):", "2026-11-03");
+        if (!dateStr) return;
+
+        const electionDate = new Date(dateStr);
+        if (isNaN(electionDate.getTime())) {
+          alert("Invalid date format. Please use YYYY-MM-DD.");
+          return;
+        }
+
+        // Schedule all three reminders
+        const reminderTypes = [
+          { type: "one_week", label: "1 week before" },
+          { type: "one_day", label: "1 day before" },
+          { type: "morning_of", label: "Morning of election" }
+        ];
+
+        let successCount = 0;
+        reminderTypes.forEach((reminder) => {
+          window.NativeBridge.scheduleElectionReminder(
+            electionName,
+            electionDate,
+            reminder.type,
+            (result) => {
+              if (result.success) {
+                successCount++;
+                if (successCount === reminderTypes.length) {
+                  window.NativeBridge.haptic("reminderScheduled");
+                  showToast("✓ Election reminders set!");
+
+                  // Also offer to add to calendar
+                  setTimeout(() => {
+                    if (confirm("Would you like to add this election to your calendar too?")) {
+                      addElectionToCalendar(electionName, electionDate);
+                    }
+                  }, 500);
+                }
+              } else {
+                console.error(`Failed to schedule ${reminder.label} reminder:`, result.error);
+              }
+            }
+          );
+        });
+      });
+    }
+
+    function addElectionToCalendar(electionName, electionDate, pollingLocation) {
+      window.NativeBridge.requestCalendarPermission((response) => {
+        if (!response.authorized) {
+          alert("To add elections to your calendar, please enable calendar access in your device Settings.\n\n" + response.message);
+          return;
+        }
+
+        const stateSelect = byId("state-select");
+        const state = stateSelect && stateSelect.value ? stateSelect.value : "";
+        const notes = state ? `Election in ${state}. Don't forget to vote!` : "Don't forget to vote!";
+
+        window.NativeBridge.addToCalendar(
+          electionName || "Election Day",
+          electionDate || new Date("2026-11-03"),
+          pollingLocation || "",
+          notes,
+          (result) => {
+            if (result.success) {
+              window.NativeBridge.haptic("calendarEventAdded");
+              showToast("✓ Added to calendar!");
+            } else {
+              alert("Failed to add to calendar: " + result.error);
+            }
+          }
+        );
+      });
+    }
+
     function openTrustModal() {
+      window.NativeBridge.haptic("buttonTap");
       const overlay = byId("trustOverlay");
       if (!overlay) return;
       overlay.classList.add("show");
@@ -816,6 +983,7 @@
     }
 
     function closeTrustModal() {
+      window.NativeBridge.haptic("buttonTap");
       const overlay = byId("trustOverlay");
       if (!overlay) return;
       overlay.classList.remove("show");
@@ -823,6 +991,7 @@
     }
 
     function showMainScreen() {
+      window.NativeBridge.haptic("navigate");
       const intro = byId("introScreen");
       const main = byId("mainScreen");
       if (intro) intro.classList.add("hidden");
@@ -831,6 +1000,7 @@
     }
 
     function showIntroScreen() {
+      window.NativeBridge.haptic("navigate");
       const intro = byId("introScreen");
       const main = byId("mainScreen");
       if (main) main.classList.add("hidden");
@@ -850,6 +1020,7 @@
 
       if (btnNext) {
         btnNext.addEventListener("click", () => {
+          window.NativeBridge.haptic("buttonTap");
           localStorage.setItem("bb_seen_intro", "1");
           showMainScreen();
         });
@@ -857,6 +1028,7 @@
 
       if (btnSkip) {
         btnSkip.addEventListener("click", () => {
+          window.NativeBridge.haptic("buttonTap");
           showMainScreen();
         });
       }
@@ -886,11 +1058,32 @@
       const btnReminders = byId("btn-reminders");
       const btnShare = byId("btn-share");
 
-      if (btnRegistration) btnRegistration.addEventListener("click", () => safeOpen(URL_CHECK));
-      if (btnDeadlines) btnDeadlines.addEventListener("click", () => safeOpen(URL_DEADLINES));
-      if (btnAbsentee) btnAbsentee.addEventListener("click", () => openAbsentee(stateSelect));
-      if (btnPolling) btnPolling.addEventListener("click", () => safeOpen(URL_POLLING));
-      if (btnReminders) btnReminders.addEventListener("click", () => safeOpen(URL_REMINDERS));
+      // Add haptic feedback to all main buttons
+      if (btnRegistration) btnRegistration.addEventListener("click", () => {
+        window.NativeBridge.haptic("importantAction");
+        safeOpen(URL_CHECK);
+      });
+
+      if (btnDeadlines) btnDeadlines.addEventListener("click", () => {
+        window.NativeBridge.haptic("buttonTap");
+        safeOpen(URL_DEADLINES);
+      });
+
+      if (btnAbsentee) btnAbsentee.addEventListener("click", () => {
+        window.NativeBridge.haptic("buttonTap");
+        openAbsentee(stateSelect);
+      });
+
+      if (btnPolling) btnPolling.addEventListener("click", () => {
+        window.NativeBridge.haptic("buttonTap");
+        safeOpen(URL_POLLING);
+      });
+
+      // NATIVE REMINDERS - use native notifications + calendar
+      if (btnReminders) btnReminders.addEventListener("click", () => {
+        showReminderModal();
+      });
+
       if (btnShare) btnShare.addEventListener("click", () => shareLink(stateSelect));
 
       const btnTrust = byId("btn-trust");
@@ -914,6 +1107,7 @@
 
       if (stateSelect) {
         stateSelect.addEventListener("change", () => {
+          window.NativeBridge.haptic("stateSelected");
           syncStateGlow();
           if (stateSelect.value) showToast(`Selected: ${stateSelect.value}`);
         });
