@@ -395,34 +395,30 @@
     /* iOS-style Back button (main -> landing) */
     .bbBack{
       position: absolute;
-      top: 12px;
-      left: 12px;
+      top: 16px;
+      left: 16px;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.22);
-      background: rgba(255,255,255,0.12);
+      gap: 4px;
+      padding: 0;
+      border: none;
+      background: transparent;
       color: rgba(255,255,255,0.95);
-      font-weight: 900;
-      font-size: 14px;
+      font-weight: 600;
+      font-size: 17px;
       cursor: pointer;
       z-index: 2;
-      box-shadow: 0 12px 22px rgba(0,0,0,0.18);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      transition: transform 0.12s ease, background 0.12s ease;
+      transition: opacity 0.12s ease;
       -webkit-tap-highlight-color: transparent;
     }
-    .bbBack:hover{ background: rgba(255,255,255,0.16); }
-    .bbBack:active{ transform: translateY(1px); background: rgba(255,255,255,0.18); }
+    .bbBack:hover{ opacity: 0.8; }
+    .bbBack:active{ opacity: 0.6; }
 
     .bbBack svg{
-      width: 16px;
-      height: 16px;
-      stroke: rgba(255,255,255,0.94);
-      stroke-width: 2.4;
+      width: 13px;
+      height: 21px;
+      stroke: rgba(255,255,255,0.95);
+      stroke-width: 2.6;
       fill: none;
       stroke-linecap: round;
       stroke-linejoin: round;
@@ -697,19 +693,21 @@
         <span>Powered by builtbyeljefe</span>
         <span class="dot">·</span>
 
-        <a class="footerLink"
+        <button class="footerLink"
            id="link-privacy"
-           href="https://mynameisjef1328.github.io/ballotbuddy-support/privacy.html">
+           type="button"
+           style="border: none; background: none; padding: 0; font: inherit; cursor: pointer;">
            Privacy
-        </a>
+        </button>
 
         <span class="dot">·</span>
 
-        <a class="footerLink"
+        <button class="footerLink"
            id="link-support"
-           href="https://mynameisjef1328.github.io/ballotbuddy-support/">
+           type="button"
+           style="border: none; background: none; padding: 0; font: inherit; cursor: pointer;">
            Support
-        </a>
+        </button>
       </div>
 
     </div>
@@ -784,6 +782,7 @@
 
         // Haptic feedback
         haptic(type) {
+          console.log(`[Haptic] ${type}`);
           sendMessage("haptic", { type });
         },
 
@@ -831,11 +830,18 @@
       return name.trim().toLowerCase().replace(/[.]/g, "").replace(/\s+/g, "-");
     }
 
-    // In WKWebView, this is the most reliable behavior.
-    // It navigates in the same webview so users can use the native back gesture too.
+    // Open external links in Safari so users can easily get back to the app
     function safeOpen(url) {
       window.NativeBridge.haptic("navigate");
-      window.location.href = url;
+
+      // Check if running in native app
+      if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.nativeApp) {
+        // Open in Safari - user can return to app via app switcher
+        window.open(url, '_blank');
+      } else {
+        // Fallback for browser
+        window.location.href = url;
+      }
     }
 
     function openAbsentee(stateSelect) {
@@ -888,10 +894,21 @@
 
     // ========== NATIVE ELECTION REMINDERS ==========
     function showReminderModal() {
+      console.log("Reminders button clicked");
       window.NativeBridge.haptic("importantAction");
+
+      // Check if running in native app
+      if (!window.webkit || !window.webkit.messageHandlers || !window.webkit.messageHandlers.nativeApp) {
+        console.log("Native bridge not available, opening Vote.org reminders page");
+        alert("Native reminders are available in the iOS app. Opening Vote.org reminders page...");
+        window.open(URL_REMINDERS, '_blank');
+        return;
+      }
 
       // Request notification permission first
       window.NativeBridge.requestNotificationPermission((response) => {
+        console.log("Notification permission response:", response);
+
         if (!response.authorized) {
           alert("To set election reminders, please enable notifications in your device Settings.\n\nNever miss an election - we'll remind you when it's time to vote!");
           return;
@@ -924,6 +941,7 @@
             electionDate,
             reminder.type,
             (result) => {
+              console.log(`Reminder ${reminder.type} result:`, result);
               if (result.success) {
                 successCount++;
                 if (successCount === reminderTypes.length) {
@@ -1110,6 +1128,24 @@
           window.NativeBridge.haptic("stateSelected");
           syncStateGlow();
           if (stateSelect.value) showToast(`Selected: ${stateSelect.value}`);
+        });
+      }
+
+      // Footer links - open in Safari
+      const linkPrivacy = byId("link-privacy");
+      const linkSupport = byId("link-support");
+
+      if (linkPrivacy) {
+        linkPrivacy.addEventListener("click", () => {
+          window.NativeBridge.haptic("buttonTap");
+          window.open("https://mynameisjef1328.github.io/ballotbuddy-support/privacy.html", '_blank');
+        });
+      }
+
+      if (linkSupport) {
+        linkSupport.addEventListener("click", () => {
+          window.NativeBridge.haptic("buttonTap");
+          window.open("https://mynameisjef1328.github.io/ballotbuddy-support/", '_blank');
         });
       }
     });
