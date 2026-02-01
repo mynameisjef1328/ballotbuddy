@@ -51,6 +51,10 @@ class NativeFeaturesBridge: NSObject, WKScriptMessageHandler {
         case "getCalendarStatus":
             handleGetCalendarStatus(body: body)
 
+        // MARK: - Share Action
+        case "share":
+            handleShare(body: body)
+
         default:
             print("Unknown action: \(action)")
         }
@@ -268,6 +272,42 @@ class NativeFeaturesBridge: NSObject, WKScriptMessageHandler {
                 "message": self.calendarManager.getAuthorizationMessage()
             ]
             self.sendCallback(callbackId: callbackId, response: response)
+        }
+    }
+
+    // MARK: - Share Handler
+
+    private func handleShare(body: [String: Any]) {
+        guard let text = body["text"] as? String else { return }
+        let callbackId = body["callbackId"] as? String
+
+        DispatchQueue.main.async {
+            let activityVC = UIActivityViewController(activityItems: [text], applicationActivities: nil)
+
+            guard let rootVC = UIApplication.shared.connectedScenes
+                .compactMap({ $0 as? UIWindowScene })
+                .flatMap({ $0.windows })
+                .first(where: { $0.isKeyWindow })?
+                .rootViewController else {
+                self.sendCallback(callbackId: callbackId, response: ["success": false, "error": "No root view controller"])
+                return
+            }
+
+            // Required for iPad
+            if let popover = activityVC.popoverPresentationController {
+                popover.sourceView = rootVC.view
+                popover.sourceRect = CGRect(x: rootVC.view.bounds.midX, y: rootVC.view.bounds.midY, width: 0, height: 0)
+                popover.permittedArrowDirections = []
+            }
+
+            activityVC.completionWithItemsHandler = { _, completed, _, error in
+                self.sendCallback(callbackId: callbackId, response: [
+                    "success": completed,
+                    "error": error?.localizedDescription ?? ""
+                ])
+            }
+
+            rootVC.present(activityVC, animated: true)
         }
     }
 
