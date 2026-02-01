@@ -88,6 +88,49 @@ struct WebView: UIViewRepresentable {
             // Return nil so no new WKWebView is created in-app
             return nil
         }
+
+        // MARK: - JavaScript alert/confirm/prompt support
+
+        func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
+            let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+                completionHandler()
+            })
+            rootViewController?.present(alert, animated: true)
+        }
+
+        func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (Bool) -> Void) {
+            let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
+                completionHandler(false)
+            })
+            alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+                completionHandler(true)
+            })
+            rootViewController?.present(alert, animated: true)
+        }
+
+        func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (String?) -> Void) {
+            let alert = UIAlertController(title: nil, message: prompt, preferredStyle: .alert)
+            alert.addTextField { textField in
+                textField.text = defaultText
+            }
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
+                completionHandler(nil)
+            })
+            alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+                completionHandler(alert.textFields?.first?.text)
+            })
+            rootViewController?.present(alert, animated: true)
+        }
+
+        private var rootViewController: UIViewController? {
+            UIApplication.shared.connectedScenes
+                .compactMap { $0 as? UIWindowScene }
+                .flatMap { $0.windows }
+                .first { $0.isKeyWindow }?
+                .rootViewController
+        }
     }
 }
 
