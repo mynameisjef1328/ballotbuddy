@@ -8,6 +8,7 @@ struct BallotBuddyApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .preferredColorScheme(.dark)
         }
     }
 }
@@ -16,6 +17,14 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         // Set notification delegate
         UNUserNotificationCenter.current().delegate = self
+
+        // Style navigation bar globally
+        let navAppearance = UINavigationBarAppearance()
+        navAppearance.configureWithTransparentBackground()
+        navAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        navAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        UINavigationBar.appearance().standardAppearance = navAppearance
+        UINavigationBar.appearance().scrollEdgeAppearance = navAppearance
 
         return true
     }
@@ -34,10 +43,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
 
     // Handle notification tap
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        // Handle the notification tap here
-        // You can navigate to a specific view or perform an action
         print("Notification tapped: \(response.notification.request.identifier)")
-
         completionHandler()
     }
 }
