@@ -15,6 +15,19 @@
 		1A00000B /* NativeFeaturesBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A00000C /* NativeFeaturesBridge.swift */; };
 		1A00000D /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 1A00000E /* index.html */; };
 		1A00000F /* ballot-buddy-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A000010 /* ballot-buddy-icon.png */; };
+		2A000001 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A000002 /* Theme.swift */; };
+		2A000003 /* UserPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A000004 /* UserPreferences.swift */; };
+		2A000005 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A000006 /* Models.swift */; };
+		2A000007 /* VotingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A000008 /* VotingData.swift */; };
+		2A000009 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A00000A /* DashboardView.swift */; };
+		2A00000B /* ChecklistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A00000C /* ChecklistView.swift */; };
+		2A00000D /* RemindersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A00000E /* RemindersView.swift */; };
+		2A00000F /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A000010 /* OnboardingView.swift */; };
+		2A000011 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A000012 /* SettingsView.swift */; };
+		2A000013 /* StateInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A000014 /* StateInfoView.swift */; };
+		2A000015 /* WebViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A000016 /* WebViewModel.swift */; };
+		2A000017 /* BookmarkStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A000018 /* BookmarkStore.swift */; };
+		2A000019 /* BookmarksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A00001A /* BookmarksView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +41,19 @@
 		1A00000E /* index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = index.html; path = ../../index.html; sourceTree = "<group>"; };
 		1A000010 /* ballot-buddy-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ballot-buddy-icon.png"; path = "../../assets/ballot-buddy-icon.png"; sourceTree = "<group>"; };
 		1A000011 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2A000002 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		2A000004 /* UserPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPreferences.swift; sourceTree = "<group>"; };
+		2A000006 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		2A000008 /* VotingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VotingData.swift; sourceTree = "<group>"; };
+		2A00000A /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		2A00000C /* ChecklistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistView.swift; sourceTree = "<group>"; };
+		2A00000E /* RemindersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemindersView.swift; sourceTree = "<group>"; };
+		2A000010 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		2A000012 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		2A000014 /* StateInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateInfoView.swift; sourceTree = "<group>"; };
+		2A000016 /* WebViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewModel.swift; sourceTree = "<group>"; };
+		2A000018 /* BookmarkStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkStore.swift; sourceTree = "<group>"; };
+		2A00001A /* BookmarksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarksView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +84,19 @@
 				1A000006 /* NotificationManager.swift */,
 				1A000008 /* CalendarManager.swift */,
 				1A00000A /* HapticManager.swift */,
+				2A000002 /* Theme.swift */,
+				2A000004 /* UserPreferences.swift */,
+				2A000006 /* Models.swift */,
+				2A000008 /* VotingData.swift */,
+				2A00000A /* DashboardView.swift */,
+				2A00000C /* ChecklistView.swift */,
+				2A00000E /* RemindersView.swift */,
+				2A000010 /* OnboardingView.swift */,
+				2A000012 /* SettingsView.swift */,
+				2A000014 /* StateInfoView.swift */,
+				2A000016 /* WebViewModel.swift */,
+				2A000018 /* BookmarkStore.swift */,
+				2A00001A /* BookmarksView.swift */,
 				1A00000E /* index.html */,
 				1A000010 /* ballot-buddy-icon.png */,
 				1A000011 /* Info.plist */,
@@ -149,6 +188,19 @@
 				1A000007 /* CalendarManager.swift in Sources */,
 				1A000009 /* HapticManager.swift in Sources */,
 				1A00000B /* NativeFeaturesBridge.swift in Sources */,
+				2A000001 /* Theme.swift in Sources */,
+				2A000003 /* UserPreferences.swift in Sources */,
+				2A000005 /* Models.swift in Sources */,
+				2A000007 /* VotingData.swift in Sources */,
+				2A000009 /* DashboardView.swift in Sources */,
+				2A00000B /* ChecklistView.swift in Sources */,
+				2A00000D /* RemindersView.swift in Sources */,
+				2A00000F /* OnboardingView.swift in Sources */,
+				2A000011 /* SettingsView.swift in Sources */,
+				2A000013 /* StateInfoView.swift in Sources */,
+				2A000015 /* WebViewModel.swift in Sources */,
+				2A000017 /* BookmarkStore.swift in Sources */,
+				2A000019 /* BookmarksView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -207,7 +259,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -264,7 +316,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -290,7 +342,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -320,7 +372,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
