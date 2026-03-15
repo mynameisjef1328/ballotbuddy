@@ -16,6 +16,22 @@ struct DashboardView: View {
 
                 ScrollView {
                     VStack(spacing: 16) {
+                        // Custom header
+                        HStack {
+                            Text("Ballot Buddy")
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundColor(AppTheme.textPrimary)
+                            Spacer()
+                            Button {
+                                HapticManager.shared.buttonTap()
+                                showingSettings = true
+                            } label: {
+                                Image(systemName: "gearshape.fill")
+                                    .font(.system(size: 20))
+                                    .foregroundColor(AppTheme.textSecondary)
+                            }
+                        }
+
                         headerSection
                         countdownSection
                         quickInfoSection
@@ -27,23 +43,7 @@ struct DashboardView: View {
                     .padding(.bottom, 30)
                 }
             }
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Text("Ballot Buddy")
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(AppTheme.textPrimary)
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        HapticManager.shared.buttonTap()
-                        showingSettings = true
-                    } label: {
-                        Image(systemName: "gearshape.fill")
-                            .foregroundColor(AppTheme.textSecondary)
-                    }
-                }
-            }
+            .navigationBarHidden(true)
             .sheet(isPresented: $showingSettings) {
                 SettingsView(preferences: preferences)
             }
