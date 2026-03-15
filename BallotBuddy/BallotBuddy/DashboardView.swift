@@ -44,6 +44,7 @@ struct DashboardView: View {
                 }
             }
             .navigationBarHidden(true)
+            .toolbar(.hidden, for: .navigationBar)
             .sheet(isPresented: $showingSettings) {
                 SettingsView(preferences: preferences)
             }
