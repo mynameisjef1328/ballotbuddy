@@ -18,48 +18,45 @@ struct RemindersView: View {
     }
 
     var body: some View {
-        NavigationView {
-            ZStack {
-                AppTheme.backgroundGradient
-                    .ignoresSafeArea()
+        ZStack {
+            AppTheme.backgroundGradient
+                .ignoresSafeArea()
 
-                ScrollView {
-                    VStack(spacing: 16) {
-                        electionCountdownSection
-                        addReminderSection
-                        savedRemindersSection
-                    }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 8)
-                    .padding(.bottom, 30)
-                }
-
-                // Toast overlay
-                if showToast {
-                    VStack {
+            ScrollView {
+                VStack(spacing: 16) {
+                    // Custom header
+                    HStack {
+                        Text("Reminders")
+                            .font(.system(size: 20, weight: .bold))
+                            .foregroundColor(AppTheme.textPrimary)
                         Spacer()
-                        Text(toastMessage)
-                            .font(.system(size: 14, weight: .medium))
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 12)
-                            .background(Capsule().fill(AppTheme.successGreen))
-                            .padding(.bottom, 30)
-                            .transition(.move(edge: .bottom).combined(with: .opacity))
                     }
-                    .animation(.spring(), value: showToast)
+
+                    electionCountdownSection
+                    addReminderSection
+                    savedRemindersSection
                 }
+                .padding(.horizontal, 20)
+                .padding(.top, 8)
+                .padding(.bottom, 30)
             }
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Text("Reminders")
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(AppTheme.textPrimary)
+
+            // Toast overlay
+            if showToast {
+                VStack {
+                    Spacer()
+                    Text(toastMessage)
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 12)
+                        .background(Capsule().fill(AppTheme.successGreen))
+                        .padding(.bottom, 30)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
+                .animation(.spring(), value: showToast)
             }
         }
-        .navigationViewStyle(.stack)
     }
 
     // MARK: - Election Countdown
