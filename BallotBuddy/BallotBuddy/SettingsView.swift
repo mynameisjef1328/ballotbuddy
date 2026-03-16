@@ -81,15 +81,16 @@ struct SettingsView: View {
         VStack(alignment: .leading, spacing: 12) {
             SectionHeader(icon: "square.and.arrow.up", title: "Share Ballot Buddy")
 
-            Button {
-                HapticManager.shared.share()
-                shareApp()
-            } label: {
+            ShareLink(
+                item: URL(string: "https://apps.apple.com/app/ballot-buddy/id6746427498")!,
+                subject: Text("Ballot Buddy"),
+                message: Text("Check out Ballot Buddy — it helps you get ready to vote with personalized state info, checklists, and reminders.")
+            ) {
                 HStack {
                     Text("Share with friends")
                         .foregroundColor(AppTheme.textPrimary)
                     Spacer()
-                    Image(systemName: "arrow.up.right.square")
+                    Image(systemName: "square.and.arrow.up")
                         .foregroundColor(AppTheme.textMuted)
                 }
                 .padding(14)
@@ -166,25 +167,6 @@ struct SettingsView: View {
     }
 
     // MARK: - Actions
-
-    private func shareApp() {
-        let message = "Check out Ballot Buddy — it helps you get ready to vote with personalized state info, checklists, and reminders. https://apps.apple.com/app/ballot-buddy/id6746427498"
-        let activityVC = UIActivityViewController(activityItems: [message], applicationActivities: nil)
-
-        guard let rootVC = UIApplication.shared.connectedScenes
-            .compactMap({ $0 as? UIWindowScene })
-            .flatMap({ $0.windows })
-            .first(where: { $0.isKeyWindow })?
-            .rootViewController else { return }
-
-        if let popover = activityVC.popoverPresentationController {
-            popover.sourceView = rootVC.view
-            popover.sourceRect = CGRect(x: rootVC.view.bounds.midX, y: rootVC.view.bounds.midY, width: 0, height: 0)
-            popover.permittedArrowDirections = []
-        }
-
-        rootVC.present(activityVC, animated: true)
-    }
 
     private func openURL(_ urlString: String) {
         if let url = URL(string: urlString) {
