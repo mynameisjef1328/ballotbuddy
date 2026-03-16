@@ -27,49 +27,45 @@ struct ChecklistView: View {
     }
 
     var body: some View {
-        NavigationView {
-            ZStack {
-                AppTheme.backgroundGradient
-                    .ignoresSafeArea()
+        ZStack {
+            AppTheme.backgroundGradient
+                .ignoresSafeArea()
 
-                ScrollView {
-                    VStack(spacing: 16) {
-                        progressSection
-                        checklistSections
+            ScrollView {
+                VStack(spacing: 16) {
+                    // Custom header
+                    HStack {
+                        Text("Voting Checklist")
+                            .font(.system(size: 20, weight: .bold))
+                            .foregroundColor(AppTheme.textPrimary)
+                        Spacer()
+                        Button {
+                            HapticManager.shared.buttonTap()
+                            showResetAlert = true
+                        } label: {
+                            Image(systemName: "arrow.counterclockwise")
+                                .font(.system(size: 20))
+                                .foregroundColor(AppTheme.textSecondary)
+                        }
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 8)
-                    .padding(.bottom, 30)
+
+                    progressSection
+                    checklistSections
                 }
-            }
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Text("Voting Checklist")
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(AppTheme.textPrimary)
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        HapticManager.shared.buttonTap()
-                        showResetAlert = true
-                    } label: {
-                        Image(systemName: "arrow.counterclockwise")
-                            .foregroundColor(AppTheme.textSecondary)
-                    }
-                }
-            }
-            .alert("Reset Checklist?", isPresented: $showResetAlert) {
-                Button("Cancel", role: .cancel) { }
-                Button("Reset", role: .destructive) {
-                    HapticManager.shared.importantAction()
-                    preferences.resetChecklist()
-                }
-            } message: {
-                Text("This will uncheck all items. You can re-check them as you complete each step.")
+                .padding(.horizontal, 20)
+                .padding(.top, 8)
+                .padding(.bottom, 30)
             }
         }
-        .navigationViewStyle(.stack)
+        .alert("Reset Checklist?", isPresented: $showResetAlert) {
+            Button("Cancel", role: .cancel) { }
+            Button("Reset", role: .destructive) {
+                HapticManager.shared.importantAction()
+                preferences.resetChecklist()
+            }
+        } message: {
+            Text("This will uncheck all items. You can re-check them as you complete each step.")
+        }
     }
 
     // MARK: - Progress

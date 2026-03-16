@@ -3,52 +3,54 @@ import SwiftUI
 struct DashboardView: View {
     @ObservedObject var preferences: UserPreferences
     @State private var showingSettings = false
+    @State private var showingStateInfo = false
 
     var state: StateVotingInfo? {
         preferences.selectedState
     }
 
     var body: some View {
-        NavigationView {
-            ZStack {
-                AppTheme.backgroundGradient
-                    .ignoresSafeArea()
+        ZStack {
+            AppTheme.backgroundGradient
+                .ignoresSafeArea()
 
-                ScrollView {
-                    VStack(spacing: 16) {
-                        headerSection
-                        countdownSection
-                        quickInfoSection
-                        actionsSection
-                        resourcesSection
+            ScrollView {
+                VStack(spacing: 16) {
+                    // Custom header
+                    HStack {
+                        Text("Ballot Buddy")
+                            .font(.system(size: 20, weight: .bold))
+                            .foregroundColor(AppTheme.textPrimary)
+                        Spacer()
+                        Button {
+                            HapticManager.shared.buttonTap()
+                            showingSettings = true
+                        } label: {
+                            Image(systemName: "gearshape.fill")
+                                .font(.system(size: 20))
+                                .foregroundColor(AppTheme.textSecondary)
+                        }
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 8)
-                    .padding(.bottom, 30)
+
+                    headerSection
+                    countdownSection
+                    quickInfoSection
+                    actionsSection
+                    resourcesSection
                 }
-            }
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Text("Ballot Buddy")
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(AppTheme.textPrimary)
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        HapticManager.shared.buttonTap()
-                        showingSettings = true
-                    } label: {
-                        Image(systemName: "gearshape.fill")
-                            .foregroundColor(AppTheme.textSecondary)
-                    }
-                }
-            }
-            .sheet(isPresented: $showingSettings) {
-                SettingsView(preferences: preferences)
+                .padding(.horizontal, 20)
+                .padding(.top, 8)
+                .padding(.bottom, 30)
             }
         }
-        .navigationViewStyle(.stack)
+        .sheet(isPresented: $showingSettings) {
+            SettingsView(preferences: preferences)
+        }
+        .sheet(isPresented: $showingStateInfo) {
+            if let state = state {
+                StateInfoSheet(state: state)
+            }
+        }
     }
 
     // MARK: - Header
@@ -161,8 +163,9 @@ struct DashboardView: View {
                         value: state.pollingHours
                     )
 
-                    NavigationLink {
-                        StateInfoView(state: state)
+                    Button {
+                        HapticManager.shared.buttonTap()
+                        showingStateInfo = true
                     } label: {
                         HStack {
                             Text("View Full Details")
@@ -314,6 +317,27 @@ struct ActionCard: View {
                 RoundedRectangle(cornerRadius: 12)
                     .fill(color.opacity(0.12))
             )
+        }
+    }
+}
+
+// MARK: - State Info Sheet
+
+struct StateInfoSheet: View {
+    let state: StateVotingInfo
+    @Environment(\.dismiss) var dismiss
+
+    var body: some View {
+        NavigationView {
+            StateInfoView(state: state)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button("Done") {
+                            dismiss()
+                        }
+                        .foregroundColor(AppTheme.accentBlue)
+                    }
+                }
         }
     }
 }
